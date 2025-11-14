@@ -1,41 +1,46 @@
 <?php
 
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \common\models\LoginForm $model */
-
-use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
+use yii\bootstrap5\Html;
 
-$this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Login - DomusGestLink';
+
+$this->registerCssFile(Yii::getAlias('@web') . '/css/login.css');
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<div class="container login-wrapper">
+    <div class="login-box">
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+        <h1 class="login-title">Entrar</h1>
+        <p class="login-desc">Aceda à sua conta do DomusGestLink</p>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'username')
+            ->textInput(['autofocus' => true, 'placeholder' => 'Nome de utilizador'])
+            ->label(false) ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+        <?= $form->field($model, 'password')
+            ->passwordInput(['placeholder' => 'Palavra-passe'])
+            ->label(false) ?>
 
-                <div class="my-1 mx-0" style="color:#999;">
-                    If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
-                    <br>
-                    Need new verification email? <?= Html::a('Resend', ['site/resend-verification-email']) ?>
-                </div>
-
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
-
-            <?php ActiveForm::end(); ?>
+        <div class="form-check mb-2">
+            <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
         </div>
+
+        <?= Html::submitButton('Entrar', ['class' => 'btn-login', 'name' => 'login-button']) ?>
+
+        <?php ActiveForm::end(); ?>
+
+        <div class="login-footer mt-3 text-center">
+            <small>
+                Esqueceu a palavra-passe?
+                <?= Html::a('Recuperar', ['site/request-password-reset']) ?><br>
+
+                Ainda não tem conta?
+                <?= Html::a('Criar Conta', ['site/signup']) ?>
+            </small>
+        </div>
+
     </div>
 </div>

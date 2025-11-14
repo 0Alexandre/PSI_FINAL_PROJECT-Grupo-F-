@@ -1,0 +1,92 @@
+:root {
+    --primary: #0a2e46;
+    --secondary: #1b5e8c;
+    --accent: #2f9e6e;
+    --highlight: #00cc88;
+}
+
+/* Garantir fundo do template */
+html, body {
+    overflow: hidden !important;
+    min-height: 100vh !important;
+    height: auto !important;
+}
+
+/* Wrapper geral */
+.login-wrapper {
+    margin-top: 140px;
+    padding-bottom: 80px;
+}
+
+/* Caixa do Login */
+.login-box {
+    max-width: 420px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    padding: 45px 40px;
+    color: #fff;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+    animation: fadeInDown 0.7s ease;
+}
+
+/* Animação */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título */
+.login-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--highlight);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.login-desc {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    color: #e6fff7;
+}
+
+/* Inputs */
+.form-control {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.form-control::placeholder {
+    color: #cce7f3 !important;
+}
+
+/* Botão */
+.btn-login {
+    width: 100%;
+    background: linear-gradient(90deg, var(--highlight), var(--accent));
+    color: #fff;
+    padding: 12px;
+    border-radius: 14px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    margin-top: 15px;
+    transition: 0.28s ease;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 18px rgba(0, 204, 136, 0.4);
+}
+
+/* Links inferiores */
+.login-footer a {
+    color: var(--highlight);
+    font-weight: 600;
+}

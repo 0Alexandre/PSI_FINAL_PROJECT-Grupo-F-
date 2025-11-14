@@ -46,5 +46,8 @@ return [
         ],
         */
     ],
+
+    'layout' => 'main-adminlte',
+
     'params' => $params,
 ];
