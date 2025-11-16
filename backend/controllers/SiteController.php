@@ -22,15 +22,19 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+                'denyCallback' => function () {
+                    Yii::$app->user->logout();
+                    return $this->redirect(['site/login']);
+                },
                 'rules' => [
                     [
                         'actions' => ['login', 'error'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['index', 'logout'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['sysadmin', 'adminCondominio'],
                     ],
                 ],
             ],

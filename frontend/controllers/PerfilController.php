@@ -36,7 +36,7 @@ class PerfilController extends \yii\web\Controller
                     // ADMIN E SYSADMIN - proibido
                     [
                         'allow' => false,
-                        'roles' => ['admin_condominio', 'sys_admin'],
+                        'roles' => ['adminCondominio', 'sysadmin'],
                     ],
                 ],
             ],

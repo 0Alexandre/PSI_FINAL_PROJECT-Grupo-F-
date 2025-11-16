@@ -37,7 +37,7 @@ class ReservaController extends \yii\web\Controller
                     // ADMIN_CONDOMINIO E SYS_ADMIN → BLOQUEADOS NO FRONTEND
                     [
                         'allow' => false,
-                        'roles' => ['admin_condominio', 'sys_admin'],
+                        'roles' => ['adminCondominio', 'sysadmin'],
                     ],
                 ],
             ],

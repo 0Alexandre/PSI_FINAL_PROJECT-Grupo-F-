@@ -86,12 +86,41 @@ class SiteController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
+
+            // Se já estiver autenticado, redirecionar para a área correta
+            if (Yii::$app->user->can('proprietario')) {
+                return $this->redirect(['/perfil/index']);
+            }
+
+            if (Yii::$app->user->can('admin_condominio')) {
+                return $this->redirect(['/reserva/index']);
+            }
+
+            if (Yii::$app->user->can('sys_admin')) {
+                return $this->redirect(['/reserva/index']);
+            }
+
             return $this->goHome();
         }
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+
+            // REDIRECIONAMENTO POR ROLE APÓS LOGIN
+            if (Yii::$app->user->can('proprietario')) {
+                return $this->redirect(['/perfil/index']);
+            }
+
+            if (Yii::$app->user->can('admin_condominio')) {
+                return $this->redirect(['/reserva/index']);
+            }
+
+            if (Yii::$app->user->can('sys_admin')) {
+                return $this->redirect(['/reserva/index']);
+            }
+
+            return $this->goHome();
         }
 
         $model->password = '';
