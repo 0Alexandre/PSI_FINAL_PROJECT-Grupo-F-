@@ -66,8 +66,14 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $totalUsers = \common\models\User::find()->count();
+        $admins = \common\models\User::find()->where(['perfil' => 'ADMIN_CONDOMINIO'])->count();
+        $proprietarios = \common\models\User::find()->where(['perfil' => 'PROPRIETARIO'])->count();
+        $sysadmins = \common\models\User::find()->where(['perfil' => 'SYS_ADMIN'])->count();
+
+        return $this->render('index', compact('totalUsers', 'admins', 'proprietarios', 'sysadmins'));
     }
+
 
     /**
      * Login action.

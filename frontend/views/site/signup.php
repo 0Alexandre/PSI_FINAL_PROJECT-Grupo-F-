@@ -1,35 +1,45 @@
 <?php
-
-/** @var yii\web\View $this */
-/** @var yii\bootstrap5\ActiveForm $form */
-/** @var \frontend\models\SignupForm $model */
-
-use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
+use yii\bootstrap5\Html;
 
-$this->title = 'Signup';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Criar Conta';
+$this->registerCssFile(Yii::getAlias('@web') . '/css/signup.css'); // CSS externo
 ?>
-<div class="site-signup">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to signup:</p>
+<div class="container signup-wrapper">
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
+    <div class="signup-box">
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+        <h1 class="signup-title">Criar Conta</h1>
+        <p class="signup-desc">Registe-se para aceder ao DomusGestLink</p>
 
-                <?= $form->field($model, 'email') ?>
+        <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+        <?= $form->field($model, 'username')
+            ->textInput(['placeholder' => 'Nome de utilizador', 'autofocus' => true])
+            ->label(false) ?>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-                </div>
+        <?= $form->field($model, 'email')
+            ->textInput(['placeholder' => 'Email'])
+            ->label(false) ?>
 
-            <?php ActiveForm::end(); ?>
+        <?= $form->field($model, 'password')
+            ->passwordInput(['placeholder' => 'Palavra-passe'])
+            ->label(false) ?>
+
+        <?= Html::submitButton('Criar Conta', [
+            'class' => 'btn-signup',
+            'name' => 'signup-button'
+        ]) ?>
+
+        <?php ActiveForm::end(); ?>
+
+        <div class="signup-footer mt-3 text-center">
+            <small>
+                Já tem conta?
+                <?= Html::a('Iniciar Sessão', ['site/login']) ?>
+            </small>
         </div>
+
     </div>
 </div>

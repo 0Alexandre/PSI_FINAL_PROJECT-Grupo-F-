@@ -25,6 +25,8 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    public $role;
+
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
@@ -54,10 +56,18 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+
+            // CAMPOS PARA O BACKOFFICE
+            [['username', 'email', 'perfil', 'telefone', 'morada'], 'string'],
+            [['username', 'email'], 'required'],
+
+            // ROLE virtual (não está na BD)
+            ['role', 'safe'],
         ];
     }
+
 
     /**
      * {@inheritdoc}

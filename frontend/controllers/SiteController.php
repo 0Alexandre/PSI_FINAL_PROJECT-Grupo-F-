@@ -92,11 +92,11 @@ class SiteController extends Controller
                 return $this->redirect(['/perfil/index']);
             }
 
-            if (Yii::$app->user->can('admin_condominio')) {
+            if (Yii::$app->user->can('adminCondominio')) {
                 return $this->redirect(['/reserva/index']);
             }
 
-            if (Yii::$app->user->can('sys_admin')) {
+            if (Yii::$app->user->can('sysadmin')) {
                 return $this->redirect(['/reserva/index']);
             }
 
@@ -107,16 +107,20 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
+            if(Yii::$app->user->can('sysadmin') || Yii::$app->user->can('adminCondominio')){
+                Yii::$app->user->logout();
+            }
+
             // REDIRECIONAMENTO POR ROLE APÓS LOGIN
             if (Yii::$app->user->can('proprietario')) {
                 return $this->redirect(['/perfil/index']);
             }
 
-            if (Yii::$app->user->can('admin_condominio')) {
+            if (Yii::$app->user->can('adminCondominio')) {
                 return $this->redirect(['/reserva/index']);
             }
 
-            if (Yii::$app->user->can('sys_admin')) {
+            if (Yii::$app->user->can('sysadmin')) {
                 return $this->redirect(['/reserva/index']);
             }
 
