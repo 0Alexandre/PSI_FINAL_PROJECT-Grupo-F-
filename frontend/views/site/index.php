@@ -7,7 +7,6 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
 ?>
 
 <!-- Navbar -->
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -22,28 +21,34 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
-                <li class="nav-item"><a class="nav-link" href="#servicos">Funcionalidades</a></li>
-                <li class="nav-item"><a class="nav-link" href="#app">App Mobile</a></li>
-                <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
-
                 <?php if (Yii::$app->user->isGuest): ?>
 
-                    <!-- Usuário NÃO está logado -->
+                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#servicos">Funcionalidades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#app">App Mobile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="<?= Url::to(['site/login']) ?>">Login</a>
                     </li>
 
                 <?php else: ?>
 
-                    <!-- Usuário LOGADO -->
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/perfil/index']) ?>">O Meu Perfil</a>
+                        <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/reservas/index']) ?>">Reservas</a>
+                        <a class="nav-link" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= Url::to(['/.../index']) ?>">Mensagens</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= Url::to(['/perfil/index']) ?>">O Meu Perfil</a>
                     </li>
 
                     <li class="nav-item">
@@ -61,9 +66,6 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
         </div>
     </div>
 </nav>
-
-
-
 
 <!-- Hero -->
 <section class="hero-section">

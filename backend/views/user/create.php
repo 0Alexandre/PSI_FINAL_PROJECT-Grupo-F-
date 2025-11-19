@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'form' => $form,   // 👈 PASSAR O FORM
+        'form' => $form,
     ]) ?>
 
     <?php ActiveForm::end(); ?>
