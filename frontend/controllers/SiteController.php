@@ -25,32 +25,32 @@ class SiteController extends Controller
      * {@inheritdoc}
      */
     public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
+{
+    return [
+        'access' => [
+            'class' => AccessControl::class,
+            'only' => ['logout', 'signup'],
+            'rules' => [
+                [
+                    'actions' => ['signup'],
+                    'allow' => true,
+                    'roles' => ['?'],
+                ],
+                [
+                    'actions' => ['logout'],
+                    'allow' => true,
+                    'roles' => ['@'],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'logout' => ['post'],
-                ],
+        ],
+        'verbs' => [
+            'class' => VerbFilter::class,
+            'actions' => [
+                'logout' => ['post'],
             ],
-        ];
-    }
+        ],
+    ];
+}
 
     /**
      * {@inheritdoc}
@@ -87,17 +87,8 @@ class SiteController extends Controller
     {
         if (!Yii::$app->user->isGuest) {
 
-            // Se já estiver autenticado, redirecionar para a área correta
             if (Yii::$app->user->can('proprietario')) {
                 return $this->redirect(['/perfil/index']);
-            }
-
-            if (Yii::$app->user->can('adminCondominio')) {
-                return $this->redirect(['/reserva/index']);
-            }
-
-            if (Yii::$app->user->can('sysadmin')) {
-                return $this->redirect(['/reserva/index']);
             }
 
             return $this->goHome();
@@ -107,24 +98,12 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
-            if(Yii::$app->user->can('sysadmin') || Yii::$app->user->can('adminCondominio')){
+            if (Yii::$app->user->can('sysadmin') || Yii::$app->user->can('adminCondominio')) {
                 Yii::$app->user->logout();
+                return $this->refresh();
             }
 
-            // REDIRECIONAMENTO POR ROLE APÓS LOGIN
-            if (Yii::$app->user->can('proprietario')) {
-                return $this->redirect(['/perfil/index']);
-            }
-
-            if (Yii::$app->user->can('adminCondominio')) {
-                return $this->redirect(['/reserva/index']);
-            }
-
-            if (Yii::$app->user->can('sysadmin')) {
-                return $this->redirect(['/reserva/index']);
-            }
-
-            return $this->goHome();
+            return $this->redirect(['/perfil/index']);
         }
 
         $model->password = '';

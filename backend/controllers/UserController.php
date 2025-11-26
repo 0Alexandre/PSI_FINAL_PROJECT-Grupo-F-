@@ -71,18 +71,27 @@ class UserController extends Controller
     {
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post())) {
 
-            // Atribuir role
-            if (!empty($model->role)) {
-                $auth = Yii::$app->authManager;
-                $role = $auth->getRole($model->role);
-                if ($role) {
-                    $auth->assign($role, $model->id);
+            $model->setPassword('12345678');
+
+            $model->generateAuthKey();
+            $model->status = User::STATUS_ACTIVE;
+
+            if ($model->save()) {
+
+                if (!empty($model->role)) {
+                    $auth = Yii::$app->authManager;
+                    $role = $auth->getRole($model->role);
+                    if ($role) {
+                        $auth->assign($role, $model->id);
+                    }
                 }
-            }
 
-            return $this->redirect(['view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', 'Utilizador criado! A password provisória é: <strong>12345678</strong>');
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
@@ -104,7 +113,6 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
 
-            // Atualizar role
             if (!empty($model->role)) {
                 $auth = Yii::$app->authManager;
                 $auth->revokeAll($model->id);
@@ -133,7 +141,11 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = User::STATUS_DELETED;
+
+        $model->save();
+        Yii::$app->session->setFlash('success', 'O utilizador foi desativado com sucesso!');
 
         return $this->redirect(['index']);
     }

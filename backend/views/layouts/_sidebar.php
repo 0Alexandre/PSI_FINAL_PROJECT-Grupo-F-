@@ -21,7 +21,6 @@ use yii\helpers\Url;
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column">
 
-
                 <!-- DASHBOARD (todos no backend) -->
                 <li class="nav-item">
                     <a href="<?= Url::to(['/site/index']) ?>" class="nav-link">
@@ -39,9 +38,9 @@ use yii\helpers\Url;
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link disabled text-muted">
+                        <a class="nav-link">
                             <i class="nav-icon fas fa-building"></i>
-                            <p>Gestão de Condomínios (em breve)</p>
+                            <p>FAQ</p>
                         </a>
                     </li>
                 <?php endif; ?>

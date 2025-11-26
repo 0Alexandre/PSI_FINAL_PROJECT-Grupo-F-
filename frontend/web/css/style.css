@@ -7,12 +7,19 @@
 
 body {
     font-family: 'Poppins', sans-serif;
+
+    /* O SEGREDO ESTÁ AQUI: */
     background: linear-gradient(
             135deg,
             var(--primary),
             var(--secondary),
             var(--accent)
     );
+    min-height: 100vh;            /* Ocupa pelo menos 100% da altura visível */
+    background-attachment: fixed; /* CRUCIAL: Prende o fundo para não cortar no scroll */
+    background-size: cover;       /* Garante que cobre tudo */
+    background-repeat: no-repeat; /* Não deixa repetir */
+
     color: #fff;
     margin: 0;
     overflow-x: hidden;
