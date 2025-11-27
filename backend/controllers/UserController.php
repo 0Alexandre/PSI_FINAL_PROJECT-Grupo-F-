@@ -3,12 +3,13 @@
 namespace backend\controllers;
 
 use common\models\User;
+use common\models\Perfil; // <--- OBRIGATÓRIO: Importar o modelo Perfil
 use backend\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use Yii;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -22,12 +23,19 @@ class UserController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::class,
+                'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['sysadmin'], // só sysadmin pode aceder
+                        'roles' => ['sysadmin'],
                     ],
+                ],
+            ],
+            // Mantém o VerbFilter para segurança do Delete
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
             ],
         ];
@@ -35,8 +43,6 @@ class UserController extends Controller
 
     /**
      * Lists all User models.
-     *
-     * @return string
      */
     public function actionIndex()
     {
@@ -51,9 +57,6 @@ class UserController extends Controller
 
     /**
      * Displays a single User model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id)
     {
@@ -63,23 +66,31 @@ class UserController extends Controller
     }
 
     /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * Creates a new User model AND a new Perfil model.
      */
     public function actionCreate()
     {
         $model = new User();
+        $perfil = new Perfil(); // <--- Instanciar o Perfil
 
-        if ($model->load(Yii::$app->request->post())) {
+        // Carregar dados do POST para AMBOS os modelos
+        if ($model->load(Yii::$app->request->post()) && $perfil->load(Yii::$app->request->post())) {
 
             $model->setPassword('12345678');
-
             $model->generateAuthKey();
             $model->status = User::STATUS_ACTIVE;
 
+            // 1. Validar e Gravar o USER
             if ($model->save()) {
 
+                // 2. Ligar o Perfil ao ID do User criado
+                $perfil->user_id = $model->id;
+
+                // 3. Gravar o PERFIL
+                // Se o perfil falhar, podes querer apagar o user, mas para já vamos simplificar
+                $perfil->save();
+
+                // 4. Atribuir Role (RBAC)
                 if (!empty($model->role)) {
                     $auth = Yii::$app->authManager;
                     $role = $auth->getRole($model->role);
@@ -88,75 +99,78 @@ class UserController extends Controller
                     }
                 }
 
-                Yii::$app->session->setFlash('success', 'Utilizador criado! A password provisória é: <strong>12345678</strong>');
-
+                Yii::$app->session->setFlash('success', 'Utilizador e Perfil criados! Password: <strong>12345678</strong>');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'perfil' => $perfil, // <--- Envia o perfil para a View
         ]);
     }
 
-
     /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
+     * Updates an existing User model AND Perfil model.
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        // Tenta encontrar o perfil existente. Se não existir (dados antigos), cria um novo vazio.
+        $perfil = $model->perfil;
+        if (!$perfil) {
+            $perfil = new Perfil();
+            $perfil->user_id = $model->id;
+        }
 
-            if (!empty($model->role)) {
-                $auth = Yii::$app->authManager;
-                $auth->revokeAll($model->id);
+        // Carregar dados do POST para AMBOS
+        if ($model->load(Yii::$app->request->post()) && $perfil->load(Yii::$app->request->post())) {
 
-                $role = $auth->getRole($model->role);
-                if ($role) {
-                    $auth->assign($role, $model->id);
+            // Gravar ambos
+            $isValid = $model->save();
+            $isValid = $perfil->save() && $isValid; // Grava o perfil também
+
+            if ($isValid) {
+                // Atualizar Roles
+                if (!empty($model->role)) {
+                    $auth = Yii::$app->authManager;
+                    $auth->revokeAll($model->id);
+                    $role = $auth->getRole($model->role);
+                    if ($role) {
+                        $auth->assign($role, $model->id);
+                    }
                 }
-            }
 
-            return $this->redirect(['view', 'id' => $model->id]);
+                Yii::$app->session->setFlash('success', 'Utilizador atualizado com sucesso.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'perfil' => $perfil, // <--- Envia o perfil para a View
         ]);
     }
 
-
     /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
+     * Deletes (Soft Delete) an existing User model.
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
         $model->status = User::STATUS_DELETED;
 
-        $model->save();
-        Yii::$app->session->setFlash('success', 'O utilizador foi desativado com sucesso!');
+        // Usa save(false) para garantir que apaga mesmo que falte algum dado obrigatório
+        if($model->save(false)) {
+            Yii::$app->session->setFlash('success', 'O utilizador foi desativado com sucesso!');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao desativar utilizador.');
+        }
 
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = User::findOne(['id' => $id])) !== null) {

@@ -4,14 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var common\models\User $model */
+/** @var common\models\Anuncio $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Anuncios', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="user-view">
+<div class="anuncio-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
@@ -30,26 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'username',
-            'email:email',
-
-            // CORREÇÃO AQUI:
-            [
-                'label' => 'Tipo de Perfil',
-                'value' => $model->perfil->perfil ?? 'N/A', // Mostra o campo 'perfil' da tabela 'perfil'
-            ],
-            [
-                'label' => 'Telefone',
-                'value' => $model->perfil->telefone ?? 'N/A',
-            ],
-            [
-                'label' => 'Morada',
-                'value' => $model->perfil->morada ?? 'N/A',
-            ],
-
-            'status',
-            'created_at',
-            'updated_at',
+            'condominio_id',
+            'titulo',
+            'conteudo:ntext',
+            'tipo',
+            'data',
+            'visivel_publico',
         ],
     ]) ?>
 

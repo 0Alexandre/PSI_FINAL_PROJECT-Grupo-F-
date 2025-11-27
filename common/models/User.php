@@ -220,4 +220,10 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public function getPerfil()
+    {
+        // 'user_id' é a coluna na tabela perfil que liga ao ID do user
+        return $this->hasOne(\common\models\Perfil::class, ['user_id' => 'id']);
+    }
 }

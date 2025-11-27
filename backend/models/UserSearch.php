@@ -11,6 +11,15 @@ use common\models\User;
  */
 class UserSearch extends User
 {
+    // 1. CRIAR AS VARIÁVEIS PÚBLICAS
+    // Como estes campos saíram da tabela 'user', temos de os declarar aqui
+    // para o formulário de pesquisa ter onde guardar o que escreves.
+    public $perfil_nome; // Campo para pesquisar o tipo de perfil (admin/user)
+    public $telefone;
+    public $morada;
+    public $data_nascimento;
+    public $foto_perfil;
+
     /**
      * {@inheritdoc}
      */
@@ -18,7 +27,10 @@ class UserSearch extends User
     {
         return [
             [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'perfil', 'telefone', 'foto_perfil', 'morada', 'data_nascimento', 'verification_token'], 'safe'],
+            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'safe'],
+
+            // 2. TORNAR AS VARIÁVEIS SEGURAS PARA PESQUISA
+            [['perfil_nome', 'telefone', 'morada', 'data_nascimento', 'foto_perfil'], 'safe'],
         ];
     }
 
@@ -27,55 +39,68 @@ class UserSearch extends User
      */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
     /**
      * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     * @param string|null $formName Form name to be used into `->load()` method.
-     *
-     * @return ActiveDataProvider
      */
     public function search($params, $formName = null)
     {
         $query = User::find();
 
-        // add conditions that should always apply here
+        // 3. FAZER O JOIN COM A TABELA PERFIL
+        // Isto é fundamental! Junta a tabela 'user' com a tabela 'perfil' na pesquisa
+        $query->joinWith('perfil');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
 
+        // (Opcional) Configurar a ordenação para funcionar ao clicar nos títulos das colunas
+        $dataProvider->sort->attributes['telefone'] = [
+            'asc' => ['perfil.telefone' => SORT_ASC],
+            'desc' => ['perfil.telefone' => SORT_DESC],
+        ];
+        $dataProvider->sort->attributes['morada'] = [
+            'asc' => ['perfil.morada' => SORT_ASC],
+            'desc' => ['perfil.morada' => SORT_DESC],
+        ];
+        // Nota: assumindo que a coluna na tabela perfil se chama 'perfil' também
+        $dataProvider->sort->attributes['perfil_nome'] = [
+            'asc' => ['perfil.perfil' => SORT_ASC],
+            'desc' => ['perfil.perfil' => SORT_DESC],
+        ];
+
         $this->load($params, $formName);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // 4. FILTRAR
+        // Aqui dizemos explicitamente para procurar na tabela 'user' ou na tabela 'perfil'
+
         $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'data_nascimento' => $this->data_nascimento,
+            'user.id' => $this->id, // user.id para não confundir com perfil.id
+            'user.status' => $this->status,
+            'user.created_at' => $this->created_at,
+            'user.updated_at' => $this->updated_at,
+            'perfil.data_nascimento' => $this->data_nascimento, // Procura na tabela Perfil
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'perfil', $this->perfil])
-            ->andFilterWhere(['like', 'telefone', $this->telefone])
-            ->andFilterWhere(['like', 'foto_perfil', $this->foto_perfil])
-            ->andFilterWhere(['like', 'morada', $this->morada])
-            ->andFilterWhere(['like', 'verification_token', $this->verification_token]);
+        $query->andFilterWhere(['like', 'user.username', $this->username])
+            ->andFilterWhere(['like', 'user.auth_key', $this->auth_key])
+            ->andFilterWhere(['like', 'user.password_hash', $this->password_hash])
+            ->andFilterWhere(['like', 'user.password_reset_token', $this->password_reset_token])
+            ->andFilterWhere(['like', 'user.email', $this->email])
+            ->andFilterWhere(['like', 'user.verification_token', $this->verification_token])
+
+            // Filtros da tabela PERFIL
+            ->andFilterWhere(['like', 'perfil.perfil', $this->perfil_nome]) // Atenção: mapeia $this->perfil_nome para a coluna perfil.perfil
+            ->andFilterWhere(['like', 'perfil.telefone', $this->telefone])
+            ->andFilterWhere(['like', 'perfil.foto_perfil', $this->foto_perfil])
+            ->andFilterWhere(['like', 'perfil.morada', $this->morada]);
 
         return $dataProvider;
     }

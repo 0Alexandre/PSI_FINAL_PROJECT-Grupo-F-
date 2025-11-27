@@ -21,7 +21,6 @@ use yii\helpers\Url;
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column">
 
-                <!-- DASHBOARD (todos no backend) -->
                 <li class="nav-item">
                     <a href="<?= Url::to(['/site/index']) ?>" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
@@ -30,6 +29,8 @@ use yii\helpers\Url;
                 </li>
 
                 <?php if (Yii::$app->user->can('sysadmin')): ?>
+                    <li class="nav-header">ADMINISTRAÇÃO DO SISTEMA</li>
+
                     <li class="nav-item">
                         <a href="<?= Url::to(['/user/index']) ?>" class="nav-link">
                             <i class="nav-icon fas fa-users-cog"></i>
@@ -38,33 +39,49 @@ use yii\helpers\Url;
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>FAQ</p>
+                        <a href="<?= Url::to(['/condominio/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-city"></i>
+                            <p>Gestão de Condomínios</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['/faq/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-question-circle"></i>
+                            <p>Gerir FAQs</p>
                         </a>
                     </li>
                 <?php endif; ?>
 
 
                 <?php if (Yii::$app->user->can('adminCondominio')): ?>
+                    <li class="nav-header">GESTÃO DO CONDOMÍNIO</li>
+
                     <li class="nav-item">
-                        <a href="<?= Url::to(['/condominio/index']) ?>" class="nav-link">
-                            <i class="nav-icon fas fa-building"></i>
-                            <p>O Meu Condomínio</p>
+                        <a href="<?= Url::to(['/fracao/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-door-open"></i>
+                            <p>Frações / Casas</p>
                         </a>
                     </li>
 
                     <li class="nav-item">
-                        <a href="<?= Url::to(['/reservas/index']) ?>" class="nav-link">
-                            <i class="nav-icon fas fa-calendar-check"></i>
-                            <p>Reservas</p>
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a href="<?= Url::to(['/anuncios/index']) ?>" class="nav-link">
+                        <a href="<?= Url::to(['/anuncio/index']) ?>" class="nav-link">
                             <i class="nav-icon fas fa-bullhorn"></i>
                             <p>Anúncios</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['/espaco-comum/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-swimming-pool"></i>
+                            <p>Espaços Comuns</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['/reserva/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>Reservas</p>
                         </a>
                     </li>
                 <?php endif; ?>

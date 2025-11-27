@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'form' => $form,
+        'perfil' => $perfil, // <--- Adiciona esta linha
     ]) ?>
 
     <?php ActiveForm::end(); ?>
