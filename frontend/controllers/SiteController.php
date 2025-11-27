@@ -75,7 +75,19 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        if (Yii::$app->user->isGuest) {
+            return $this->render('index');
+        }
+
+        $user = Yii::$app->user->identity;
+        $minhaFracao = $user->fracao;
+        $meuCondominio = $user->condominio;
+
+
+        return $this->render('index', [
+            'minhaFracao' => $minhaFracao,
+            'meuCondominio' => $meuCondominio,
+        ]);
     }
 
     /**
@@ -88,7 +100,7 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
 
             if (Yii::$app->user->can('proprietario')) {
-                return $this->redirect(['/perfil/index']);
+                return $this->redirect(['/site/index']);
             }
 
             return $this->goHome();
@@ -103,7 +115,7 @@ class SiteController extends Controller
                 return $this->refresh();
             }
 
-            return $this->redirect(['/perfil/index']);
+            return $this->redirect(['/site/index']);
         }
 
         $model->password = '';

@@ -38,14 +38,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Tipo de Perfil',
                 'value' => $model->perfil->perfil ?? 'N/A', // Mostra o campo 'perfil' da tabela 'perfil'
             ],
-            [
-                'label' => 'Telefone',
-                'value' => $model->perfil->telefone ?? 'N/A',
-            ],
-            [
-                'label' => 'Morada',
-                'value' => $model->perfil->morada ?? 'N/A',
-            ],
 
             'status',
             'created_at',

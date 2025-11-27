@@ -226,4 +226,25 @@ class User extends ActiveRecord implements IdentityInterface
         // 'user_id' é a coluna na tabela perfil que liga ao ID do user
         return $this->hasOne(\common\models\Perfil::class, ['user_id' => 'id']);
     }
+
+    public function getFracao()
+    {
+        return $this->hasOne(\common\models\Fracao::class, ['proprietario_id' => 'id']);
+    }
+
+    /**
+     * Atalho Mágico: Descobre o Condomínio através da Fração.
+     * Permite usar $user->condominio
+     */
+    public function getCondominio()
+    {
+        // 1. Tenho fração?
+        if ($this->fracao) {
+            // 2. Se sim, devolve o condomínio dessa fração
+            return $this->fracao->condominio;
+        }
+
+        // 3. Se não, devolve null
+        return null;
+    }
 }

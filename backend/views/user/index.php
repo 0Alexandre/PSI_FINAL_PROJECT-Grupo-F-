@@ -20,27 +20,18 @@ $this->params['breadcrumbs'][] = $this->title;
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'columns' => [
-                ['class' => 'yii\grid\SerialColumn'], // Adiciona numeração 1, 2, 3...
+                ['class' => 'yii\grid\SerialColumn'],
 
                 'id',
                 'username',
                 'email:email',
 
-                // === CORREÇÃO DO PERFIL ===
                 [
-                    'attribute' => 'perfil_nome', // Usa a variável pública do UserSearch
-                    'value' => 'perfil.perfil',   // Vai buscar o valor à relação: tabela perfil -> coluna perfil
+                    'attribute' => 'perfil_nome',
+                    'value' => 'perfil.perfil',
                     'label' => 'Tipo de Perfil',
                 ],
 
-                // === EXEMPLO DO TELEFONE (Nova Tabela) ===
-                [
-                    'attribute' => 'telefone',    // Usa a variável pública do UserSearch
-                    'value' => 'perfil.telefone', // Vai buscar à relação
-                    'label' => 'Telefone',
-                ],
-
-                // Opcional: Melhorar visualização do Status
                 [
                     'attribute' => 'status',
                     'value' => function ($model) {
