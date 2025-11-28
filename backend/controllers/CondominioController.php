@@ -7,6 +7,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\User;
+use yii\helpers\ArrayHelper;
 
 /**
  * CondominioController implements the CRUD actions for Condominio model.
@@ -79,6 +81,14 @@ class CondominioController extends Controller
     {
         $model = new Condominio();
 
+        // 1. LÓGICA NO CONTROLLER (MVC Correto)
+        // Buscar apenas users com perfil ADMIN_CONDOMINIO
+        $admins = User::find()
+            ->joinWith('perfil')
+            ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
+            ->all();
+        $listaAdmins = ArrayHelper::map($admins, 'id', 'username');
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -87,21 +97,23 @@ class CondominioController extends Controller
             $model->loadDefaultValues();
         }
 
+        // 2. Enviar a lista para a view
         return $this->render('create', [
             'model' => $model,
+            'listaAdmins' => $listaAdmins, // <--- AQUI
         ]);
     }
 
-    /**
-     * Updates an existing Condominio model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        // REPETIR A MESMA LÓGICA PARA A EDIÇÃO
+        $admins = User::find()
+            ->joinWith('perfil')
+            ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
+            ->all();
+        $listaAdmins = ArrayHelper::map($admins, 'id', 'username');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -109,6 +121,7 @@ class CondominioController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'listaAdmins' => $listaAdmins, // <--- AQUI TAMBÉM
         ]);
     }
 

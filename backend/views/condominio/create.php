@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use common\models\User;
 
 /** @var yii\web\View $this */
 /** @var common\models\Condominio $model */
@@ -15,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'listaAdmins' => $listaAdmins,
     ]) ?>
 
 </div>

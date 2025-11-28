@@ -1,27 +1,30 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var common\models\Faq $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $listaCondominios */
 ?>
 
 <div class="faq-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'condominio_id')->textInput() ?>
+    <?= $form->field($model, 'condominio_id')->dropDownList(
+        $listaCondominios,
+        ['prompt' => 'Geral (Visível a todos os condomínios)']
+    )->label('Condomínio Específico') ?>
 
     <?= $form->field($model, 'pergunta')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'resposta')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'visivel_publico')->textInput() ?>
+    <?= $form->field($model, 'visivel_publico')->checkbox() ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group mt-3">
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

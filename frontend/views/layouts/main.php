@@ -5,7 +5,7 @@
 
 use frontend\assets\AppAsset;
 use yii\helpers\Html;
-use yii\helpers\Url; // <--- Importante para o teu código funcionar
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -57,6 +57,10 @@ AppAsset::register($this);
                         <?php else: ?>
 
                             <li class="nav-item">
+                                <a class="nav-link" href="<?= Url::to(['/site/index']) ?>">Dashboard</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
                             </li>
 
@@ -66,6 +70,10 @@ AppAsset::register($this);
 
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= Url::to(['/mensagem/index']) ?>">Mensagens</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= Url::to(['/faq/index']) ?>">Faq</a>
                             </li>
 
                             <li class="nav-item">
@@ -91,11 +99,20 @@ AppAsset::register($this);
 
     <main class="flex-shrink-0">
         <?php
-        // Verifica se estamos na página inicial (SiteController -> actionIndex)
+        // 1. Verifica se estamos na Homepage
         $isHomePage = Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index';
+
+        // 2. Decide qual a classe CSS a usar (com IF/ELSE)
+        if ($isHomePage) {
+            // Se for a Home: Ocupa a largura toda e sem margens (para o Hero)
+            $classeCss = 'container-fluid p-0';
+        } else {
+            // Se for outra página: Centrado e com margem no topo (para não ficar debaixo do menu)
+            $classeCss = 'container mt-5 pt-5';
+        }
         ?>
 
-        <div class="<?= $isHomePage ? 'container-fluid p-0' : 'container mt-5 pt-5' ?>">
+        <div class="<?= $classeCss ?>">
             <?= $content ?>
         </div>
     </main>

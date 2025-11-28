@@ -60,7 +60,7 @@ use yii\helpers\Url;
                     <li class="nav-item">
                         <a href="<?= Url::to(['/fracao/index']) ?>" class="nav-link">
                             <i class="nav-icon fas fa-door-open"></i>
-                            <p>Frações / Casas</p>
+                            <p>Frações</p>
                         </a>
                     </li>
 

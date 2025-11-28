@@ -37,7 +37,7 @@ class Faq extends \yii\db\ActiveRecord
             [['condominio_id', 'pergunta', 'resposta'], 'required'],
             [['condominio_id', 'visivel_publico'], 'integer'],
             [['pergunta', 'resposta'], 'string'],
-            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominios::class, 'targetAttribute' => ['condominio_id' => 'id']],
+            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominio::class, 'targetAttribute' => ['condominio_id' => 'id']],
         ];
     }
 

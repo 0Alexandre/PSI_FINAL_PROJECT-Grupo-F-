@@ -9,7 +9,7 @@ use yii\grid\GridView;
 /** @var yii\web\View $this */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Espaco Comums';
+$this->title = 'Espaços Comums';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="espaco-comum-index">
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Espaco Comum', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Criar Espaço Comum', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 

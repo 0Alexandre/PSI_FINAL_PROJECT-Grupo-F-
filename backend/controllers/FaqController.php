@@ -7,15 +7,12 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Condominio;
+use yii\helpers\ArrayHelper;
 
-/**
- * FaqController implements the CRUD actions for Faq model.
- */
 class FaqController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
+
     public function behaviors()
     {
         return array_merge(
@@ -31,11 +28,6 @@ class FaqController extends Controller
         );
     }
 
-    /**
-     * Lists all Faq models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -57,12 +49,6 @@ class FaqController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Faq model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -70,14 +56,12 @@ class FaqController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Faq model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         $model = new Faq();
+
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -89,19 +73,16 @@ class FaqController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 
-    /**
-     * Updates an existing Faq model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -109,16 +90,10 @@ class FaqController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 
-    /**
-     * Deletes an existing Faq model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -126,13 +101,6 @@ class FaqController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the Faq model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Faq the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Faq::findOne(['id' => $id])) !== null) {

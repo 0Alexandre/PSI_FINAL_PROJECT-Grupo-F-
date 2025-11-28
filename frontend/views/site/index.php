@@ -18,7 +18,7 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
             <p class="hero-subtitle">
                 Simplifique a administração do seu condomínio com tecnologia e mobilidade.
             </p>
-            <a href="<?= Url::to(['site/login']) ?>" class="btn-saiba-mais">Entrar na App</a>
+            <a href="<?= Url::to(['site/login']) ?>" class="btn-saiba-mais">Entrar</a>
         </div>
         <div class="scroll-indicator">
             <i class="fa-solid fa-chevron-down"></i>
@@ -72,16 +72,13 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
                     <h2>Aplicação Móvel</h2>
                     <p>
                         Aceda rapidamente às informações do seu condomínio através da aplicação DomusGestLink,
-                        disponível para Android e iOS. Faça reservas, leia comunicados e receba notificações
+                        disponível para Android. Faça reservas, leia comunicados e receba notificações
                         instantâneas.
                     </p>
                     <button class="btn-app">
                         <i class="fa-brands fa-google-play me-2"></i>Em breve na Play Store
                     </button>
                     <br />
-                    <button class="btn-app mt-3">
-                        <i class="fa-brands fa-apple me-2"></i>Em breve na App Store
-                    </button>
                 </div>
                 <div class="col-md-6 text-center">
                     <img src="<?= Yii::getAlias('@web') ?>/images/logo_completo.png" alt="App DomusGestLink" class="app-mockup img-fluid" />
@@ -99,11 +96,11 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
             </div>
             <div class="faq-item">
                 <h5>Quem pode utilizar?</h5>
-                <p>Administradores, proprietários e inquilinos registados no sistema.</p>
+                <p>Administradores e proprietários registados no sistema.</p>
             </div>
             <div class="faq-item">
                 <h5>Preciso instalar algo?</h5>
-                <p>Sim, existe uma aplicação mobile complementar para Android e iOS — ideal para receber notificações e aceder rapidamente.</p>
+                <p>Sim, existe uma aplicação mobile complementar para Android — ideal para receber notificações e aceder rapidamente.</p>
             </div>
         </div>
     </section>
