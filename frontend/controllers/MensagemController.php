@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use common\models\Condominio;
 
 class MensagemController extends \yii\web\Controller
 {
@@ -29,22 +30,13 @@ class MensagemController extends \yii\web\Controller
 
     public function actionCreate()
     {
-        // 1. Criar uma "folha em branco" (Objeto vazio)
         $model = new Mensagens();
 
-        // 2. Se o utilizador clicou em "Enviar" (POST)
         if ($this->request->isPost) {
-
-            // Carrega os dados do formulário (Assunto, Corpo, Destinatário)
             if ($model->load($this->request->post())) {
-
-                // 3. Preenchimento Automático (O utilizador não vê isto)
-                // Quem envia sou eu (o utilizador logado)
                 $model->remetente_id = Yii::$app->user->id;
-                // A data é agora
                 $model->data_envio = date('Y-m-d H:i:s');
 
-                // 4. Tentar guardar na Base de Dados
                 if ($model->save()) {
                     Yii::$app->session->setFlash('success', 'Mensagem enviada com sucesso!');
                     return $this->redirect(['index']);
@@ -52,14 +44,18 @@ class MensagemController extends \yii\web\Controller
             }
         }
 
-        // 5. Preparar a lista para o Dropdown (Para quem posso enviar?)
-        // Exemplo: Todos os utilizadores ativos, exceto eu próprio
-        $destinatarios = User::find()
-            ->where(['status' => 10])
-            ->andWhere(['<>', 'id', Yii::$app->user->id])
-            ->all();
+        $user = Yii::$app->user->identity;
 
-        // 6. Renderizar a View enviando as variáveis necessárias
+        $meuCondominio = $user->getCondominio();
+
+        $destinatarios = [];
+
+        if ($meuCondominio) {
+            $destinatarios = User::find()
+                ->where(['id' => $meuCondominio->admin_id])
+                ->all();
+        }
+
         return $this->render('create', [
             'model' => $model,
             'destinatarios' => $destinatarios,
