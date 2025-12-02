@@ -84,6 +84,13 @@ use yii\helpers\Url;
                             <p>Reservas</p>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a href="<?= Url::to(['/mensagem/index']) ?>" class="nav-link">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p>Mensagens</p>
+                        </a>
+                    </li>
                 <?php endif; ?>
 
             </ul>
