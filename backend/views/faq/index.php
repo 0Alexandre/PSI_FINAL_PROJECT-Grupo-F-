@@ -3,7 +3,7 @@
 use common\models\Faq;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
+use common\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
@@ -31,12 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'pergunta:ntext',
             'resposta:ntext',
             'visivel_publico',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Faq $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+
+            ['class' => ActionColumn::class],
         ],
     ]); ?>
 

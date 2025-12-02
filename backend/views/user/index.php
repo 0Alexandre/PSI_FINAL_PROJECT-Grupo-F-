@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Html;
 use yii\grid\GridView;
+use common\grid\ActionColumn; // Importar a tua classe de botões
+use common\grid\StatusColumn; // Importar a tua classe de status
 
 $this->title = 'Gestão de Utilizadores';
 $this->params['breadcrumbs'][] = $this->title;
@@ -19,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
+            'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'], // CSS Nível 1
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 
@@ -32,15 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label' => 'Tipo de Perfil',
                 ],
 
-                [
-                    'attribute' => 'status',
-                    'value' => function ($model) {
-                        return $model->status == 10 ? 'Ativo' : 'Inativo';
-                    },
-                    'filter' => [10 => 'Ativo', 9 => 'Inativo', 0 => 'Apagado'],
-                ],
+                ['class' => StatusColumn::class],
 
-                ['class' => 'yii\grid\ActionColumn'],
+                // Botões bonitos
+                ['class' => ActionColumn::class],
             ],
         ]); ?>
     </div>

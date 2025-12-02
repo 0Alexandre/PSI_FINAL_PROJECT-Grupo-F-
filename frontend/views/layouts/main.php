@@ -61,11 +61,11 @@ AppAsset::register($this);
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
+                                <a class="nav-link disabled" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
+                                <a class="nav-link disabled" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
                             </li>
 
                             <li class="nav-item">
@@ -73,21 +73,35 @@ AppAsset::register($this);
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= Url::to(['/faq/index']) ?>">Faq</a>
+                                <a class="nav-link" href="<?= Url::to(['/faq/index']) ?>">FAQ</a>
                             </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link" href="<?= Url::to(['/perfil/index']) ?>">O Meu Perfil</a>
-                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle me-1"></i>
+                                    <?= Yii::$app->user->identity->username ?>
+                                </a>
 
-                            <li class="nav-item">
-                                <?= Html::beginForm(['/site/logout'], 'post')
-                                . Html::submitButton(
-                                    'Logout',
-                                    ['class' => 'nav-link btn btn-link fw-bold logout', 'style' => 'text-decoration: none;']
-                                )
-                                . Html::endForm()
-                                ?>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+
+                                    <li>
+                                        <a class="dropdown-item" href="<?= Url::to(['/perfil/index']) ?>">
+                                            <i class="fas fa-id-card me-2"></i> O Meu Perfil
+                                        </a>
+                                    </li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li>
+                                        <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex w-100']) ?>
+                                        <?= Html::submitButton(
+                                            '<i class="fas fa-sign-out-alt me-2"></i> Sair',
+                                            ['class' => 'dropdown-item text-danger', 'style' => 'cursor: pointer;']
+                                        ) ?>
+                                        <?= Html::endForm() ?>
+                                    </li>
+
+                                </ul>
                             </li>
 
                         <?php endif; ?>

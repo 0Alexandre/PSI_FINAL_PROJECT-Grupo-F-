@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'listaCondominios' => $listaCondominios, // <--- ESTA LINHA É CRÍTICA!
+        'listaCondominios' => $listaCondominios,
     ]) ?>
 
 </div>

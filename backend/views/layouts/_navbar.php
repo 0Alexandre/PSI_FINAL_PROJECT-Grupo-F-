@@ -15,13 +15,6 @@ use yii\helpers\Html;
 
     <!-- Lado direito -->
     <ul class="navbar-nav ml-auto">
-
-        <li class="nav-item d-flex align-items-center mr-3">
-        <span class="text-dark fw-bold">
-            <?= Html::encode(Yii::$app->user->identity->username) ?>
-        </span>
-        </li>
-
         <li class="nav-item">
             <?= Html::beginForm(['/site/logout'], 'post') ?>
             <?= Html::submitButton(

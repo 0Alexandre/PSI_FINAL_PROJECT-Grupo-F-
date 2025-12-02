@@ -3,7 +3,7 @@
 use common\models\Reserva;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
+use common\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
@@ -31,13 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'utilizador_id',
             'inicio',
             'fim',
-            //'estado',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Reserva $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+
+            ['class' => ActionColumn::class],
         ],
     ]); ?>
 

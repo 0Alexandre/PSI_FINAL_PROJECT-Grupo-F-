@@ -3,7 +3,7 @@
 use common\models\EspacoComum;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
+use common\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
@@ -30,12 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'condominio_id',
             'nome',
             'descricao:ntext',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, EspacoComum $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+
+            ['class' => ActionColumn::class],
         ],
     ]); ?>
 

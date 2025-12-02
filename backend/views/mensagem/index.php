@@ -3,7 +3,7 @@
 use common\models\Mensagens;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\ActionColumn;
+use common\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Mensagens', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Criar Mensagens', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -31,13 +31,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'destinatario_id',
             'assunto',
             'corpo:ntext',
-            //'data_envio',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Mensagens $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
-            ],
+
+            ['class' => ActionColumn::class],
         ],
     ]); ?>
 
