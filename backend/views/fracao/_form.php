@@ -2,23 +2,14 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
-use common\models\Condominio;
-use common\models\User;
+
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Fracao */
 /* @var $form yii\widgets\ActiveForm */
+/** @var array $listaCondominios */
+/** @var array $listaProprietarios */
 
-// 1. Lista de Condomínios (Para dizer onde fica a casa)
-$condominios = Condominio::find()->all();
-$listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
-
-// 2. Lista de Proprietários (Para dizer de quem é a casa)
-$proprietarios = User::find()
-    ->joinWith('perfil')
-    ->where(['perfil.perfil' => 'PROPRIETARIO']) // Só mostra Proprietários
-    ->all();
-$listaProprietarios = ArrayHelper::map($proprietarios, 'id', 'username');
 ?>
 
 <div class="fracao-form">

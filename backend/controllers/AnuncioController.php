@@ -7,6 +7,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Condominio;
+use yii\helpers\ArrayHelper;
 
 /**
  * AnuncioController implements the CRUD actions for Anuncio model.
@@ -87,8 +89,12 @@ class AnuncioController extends Controller
             $model->loadDefaultValues();
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
         return $this->render('create', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 
@@ -107,8 +113,12 @@ class AnuncioController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
         return $this->render('update', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 

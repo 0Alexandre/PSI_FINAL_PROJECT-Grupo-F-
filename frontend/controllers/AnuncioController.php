@@ -2,7 +2,9 @@
 
 namespace frontend\controllers;
 
+use common\models\Anuncio;
 use yii\filters\AccessControl;
+use Yii;
 
 class AnuncioController extends \yii\web\Controller
 {
@@ -16,7 +18,6 @@ class AnuncioController extends \yii\web\Controller
                 },
                 'rules' => [
 
-                    // PROPRIETÁRIO - permitido
                     [
                         'allow' => true,
                         'roles' => ['proprietario'],
@@ -26,13 +27,11 @@ class AnuncioController extends \yii\web\Controller
                         ],
                     ],
 
-                    // VISITANTE - proibido
                     [
                         'allow' => false,
                         'roles' => ['?'],
                     ],
 
-                    // ADMIN E SYSADMIN - proibido
                     [
                         'allow' => false,
                         'roles' => ['adminCondominio', 'sysadmin'],
@@ -44,7 +43,22 @@ class AnuncioController extends \yii\web\Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $user = Yii::$app->user->identity;
+
+        $meuCondominio = $user->getCondominio();
+
+        if (!$meuCondominio) {
+            $anuncios = [];
+        } else {
+            $anuncios = Anuncio::find()
+                ->where(['condominio_id' => $meuCondominio->id])
+                ->orderBy(['data' => SORT_DESC])
+                ->all();
+        }
+
+        return $this->render('index', [
+            'anuncios' => $anuncios,
+        ]);
     }
 
     public function actionView()

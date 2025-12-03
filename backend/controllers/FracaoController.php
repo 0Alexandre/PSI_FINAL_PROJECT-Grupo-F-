@@ -7,6 +7,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use common\models\Condominio;
+use yii\helpers\ArrayHelper;
+use common\models\User;
 
 /**
  * FracaoController implements the CRUD actions for Fracao model.
@@ -87,8 +90,20 @@ class FracaoController extends Controller
             $model->loadDefaultValues();
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
+        $proprietarios = User::find()
+            ->joinWith('perfil')
+            ->where(['perfil.perfil' => 'PROPRIETARIO'])
+            ->all();
+
+        $listaProprietarios = ArrayHelper::map($proprietarios, 'id', 'username');
+
         return $this->render('create', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
+            'listaProprietarios' => $listaProprietarios,
         ]);
     }
 

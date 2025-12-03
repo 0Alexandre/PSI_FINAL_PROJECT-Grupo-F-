@@ -6,26 +6,42 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Anuncio $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $listaCondominios */ //
 ?>
 
 <div class="anuncio-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'condominio_id')->textInput() ?>
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">Novo Aviso</h3>
+        </div>
+        <div class="card-body">
 
-    <?= $form->field($model, 'titulo')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'condominio_id')->dropDownList(
+                $listaCondominios,
+                ['prompt' => 'Selecione o Condomínio...']
+            )->label('Publicar no Condomínio') ?>
 
-    <?= $form->field($model, 'conteudo')->textarea(['rows' => 6]) ?>
+            <?= $form->field($model, 'titulo')->textInput(['maxlength' => true, 'placeholder' => 'Ex: Elevador em Manutenção']) ?>
 
-    <?= $form->field($model, 'tipo')->dropDownList([ 'GERAL' => 'GERAL', 'REUNIAO' => 'REUNIAO', 'MANUTENCAO' => 'MANUTENCAO', ], ['prompt' => '']) ?>
+            <?= $form->field($model, 'tipo')->dropDownList([
+                'GERAL' => 'Informação Geral',
+                'REUNIAO' => 'Reunião de Condomínio',
+                'MANUTENCAO' => 'Obras / Manutenção',
+                'URGENTE' => 'Urgente / Importante',
+            ]) ?>
 
-    <?= $form->field($model, 'data')->textInput() ?>
+            <?= $form->field($model, 'conteudo')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'visivel_publico')->textInput() ?>
+            <?= $form->field($model, 'visivel_publico')->checkbox(['label' => 'Publicar Imediatamente']) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        </div>
+    </div>
+
+    <div class="form-group mt-3">
+        <?= Html::submitButton('Publicar Anúncio', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

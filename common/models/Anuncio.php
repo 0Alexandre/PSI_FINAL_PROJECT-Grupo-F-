@@ -50,7 +50,7 @@ class Anuncio extends \yii\db\ActiveRecord
             [['data'], 'safe'],
             [['titulo'], 'string', 'max' => 150],
             ['tipo', 'in', 'range' => array_keys(self::optsTipo())],
-            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominios::class, 'targetAttribute' => ['condominio_id' => 'id']],
+            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominio::class, 'targetAttribute' => ['condominio_id' => 'id']],
         ];
     }
 
@@ -77,7 +77,7 @@ class Anuncio extends \yii\db\ActiveRecord
      */
     public function getCondominio()
     {
-        return $this->hasOne(Condominios::class, ['id' => 'condominio_id']);
+        return $this->hasOne(Condominio::class, ['id' => 'condominio_id']);
     }
 
 

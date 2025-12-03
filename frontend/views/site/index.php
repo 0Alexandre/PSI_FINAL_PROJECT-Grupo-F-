@@ -111,55 +111,27 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
 
         <?php if (isset($meuCondominio) && $meuCondominio): ?>
 
-            <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
-                <div class="container-fluid py-3">
-                    <h1 class="display-5 fw-bold text-primary">
-                        <i class="fas fa-building"></i> <?= Html::encode($meuCondominio->nome) ?>
-                    </h1>
-                    <p class="col-md-8 fs-4">Olá, <strong><?= Yii::$app->user->identity->username ?></strong>. Bem-vindo a casa.</p>
-                    <hr class="my-4">
+            <div class="d-flex align-items-center vh-100">
+                <div class="container">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-home"></i> A sua Fração:</h5>
-                            <p class="lead"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-map-marker-alt"></i> Morada:</h5>
-                            <p class="lead"><?= Html::encode($meuCondominio->morada) ?></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+                        <div class="container-fluid py-3">
+                            <h1 class="display-5 fw-bold text-primary">
+                                <i class="fas fa-building"></i> <?= Html::encode($meuCondominio->nome) ?>
+                            </h1>
+                            <p class="col-md-8 fs-4">Olá, <strong><?= Yii::$app->user->identity->username ?></strong>. Bem-vindo a casa.</p>
+                            <hr class="my-4">
 
-            <div class="row g-4 mb-5">
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-success">
-                        <div class="card-body text-center">
-                            <i class="fas fa-calendar-plus fa-3x text-success mb-3"></i>
-                            <h5 class="card-title">Reservas</h5>
-                            <p class="card-text">Reserve a piscina, churrasqueira ou salão de festas.</p>
-                            <a href="<?= Url::to(['/reserva/create']) ?>" class="btn btn-success w-100">Fazer Reserva</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-info">
-                        <div class="card-body text-center">
-                            <i class="fas fa-bullhorn fa-3x text-info mb-3"></i>
-                            <h5 class="card-title">Avisos</h5>
-                            <p class="card-text">Consulte os comunicados do administrador.</p>
-                            <a href="<?= Url::to(['/anuncio/index']) ?>" class="btn btn-info text-white w-100">Ler Avisos</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-warning">
-                        <div class="card-body text-center">
-                            <i class="fas fa-user-circle fa-3x text-warning mb-3"></i>
-                            <h5 class="card-title">O Meu Perfil</h5>
-                            <p class="card-text">Atualize os seus contactos e foto.</p>
-                            <a href="<?= Url::to(['/site/perfil']) ?>" class="btn btn-warning w-100">Editar Dados</a>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-home"></i> A sua Fração:</h5>
+                                    <p class="lead"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5><i class="fas fa-map-marker-alt"></i> Morada:</h5>
+                                    <p class="lead"><?= Html::encode($meuCondominio->morada) ?></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

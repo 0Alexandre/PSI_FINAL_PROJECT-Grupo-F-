@@ -65,7 +65,7 @@ AppAsset::register($this);
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link disabled" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
+                                <a class="nav-link" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
                             </li>
 
                             <li class="nav-item">

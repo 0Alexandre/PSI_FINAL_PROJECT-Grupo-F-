@@ -3,70 +3,38 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
+/** @var common\models\Anuncio[] $anuncios */
+
+
 $this->title = 'DomusGestLink - Anuncios/Avisos';
 ?>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="<?= Yii::getAlias('@web') ?>/images/logo.png" alt="DomusGestLink" class="me-3" />
-            <span class="brand-text">DomusGestLink</span>
-        </a>
+<div class="container mt-5">
+    <h1>Quadro de Avisos</h1>
+    <hr>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <?php if (empty($anuncios)): ?>
+        <p>Não há avisos para mostrar.</p>
+    <?php else: ?>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
+        <?php foreach ($anuncios as $anuncio): ?>
 
-                <?php if (Yii::$app->user->isGuest): ?>
+            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
 
-                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#servicos">Funcionalidades</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#app">App Mobile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                <h3>
+                    <?= $anuncio->titulo ?>
+                    <small style="color: grey; font-size: 14px;">(<?= $anuncio->tipo ?>)</small>
+                </h3>
 
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold" href="<?= Url::to(['site/login']) ?>">Login</a>
-                    </li>
+                <p style="font-size: 12px; color: #888;">
+                    Publicado em: <?= Yii::$app->formatter->asDatetime($anuncio->data) ?>
+                </p>
 
-                <?php else: ?>
+                <p><?= Yii::$app->formatter->asNtext($anuncio->conteudo) ?></p>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
-                    </li>
+            </div>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
-                    </li>
+        <?php endforeach; ?>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/.../index']) ?>">Mensagens</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/perfil/index']) ?>">O Meu Perfil</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <?= Html::beginForm(['/site/logout'], 'post')
-                        . Html::submitButton(
-                            'Logout',
-                            ['class' => 'nav-link btn btn-link fw-bold logout']
-                        )
-                        . Html::endForm()
-                        ?>
-                    </li>
-
-                <?php endif; ?>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<section class="hero-section">
-    <h1>Anuncios/Avisos</h1>
-</section>
+    <?php endif; ?>
+</div>
