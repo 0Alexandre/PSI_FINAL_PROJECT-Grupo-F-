@@ -2,7 +2,7 @@
 use dmstr\adminlte\web\AdminLteAsset;
 use yii\helpers\Html;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert; // Importaste bem aqui...
+use common\widgets\Alert;
 
 AdminLteAsset::register($this);
 $this->beginPage();

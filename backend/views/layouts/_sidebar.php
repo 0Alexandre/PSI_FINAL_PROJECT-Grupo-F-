@@ -17,7 +17,11 @@ $inicial = strtoupper(substr($username, 0, 1));
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <a href="<?= Url::to(['/site/index']) ?>" class="brand-link">
-        <span class="brand-text font-weight-light pl-2">DomusGestLink</span>
+        <img src="<?= Yii::getAlias('@web') ?>/images/logo.png"
+             alt="Domus Logo"
+             class="brand-image img-circle elevation-3"
+             style="opacity: .8">
+        <span class="brand-text font-weight-light">DomusGestLink</span>
     </a>
 
     <div class="sidebar">

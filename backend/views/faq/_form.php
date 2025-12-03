@@ -21,7 +21,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'resposta')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'visivel_publico')->checkbox() ?>
+    <?= $form->field($model, 'visivel_publico')->dropDownList([
+        1 => 'Publicado (Visível)',
+        0 => 'Rascunho (Oculto)',
+    ])->label('Estado') ?>
 
     <div class="form-group mt-3">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>

@@ -31,9 +31,8 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
         </div>
     </div>
 
-    <!-- SECÇÃO 2: ESTATÍSTICAS DE SISTEMA (Só para o Sysadmin) -->
     <?php if ($isSysAdmin): ?>
-        <h4 class="mt-4 mb-3 text-muted"><i class="fas fa-cogs"></i> Dados do Sistema (Apenas Sysadmin)</h4>
+        <h4 class="mt-4 mb-3 text-muted"><i class="fas fa-cogs"></i> Dados do Sistema</h4>
         <div class="row">
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
