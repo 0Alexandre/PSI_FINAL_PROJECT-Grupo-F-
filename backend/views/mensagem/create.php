@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'listaDestinatarios' => $listaDestinatarios, // <--- OBRIGATÓRIO
+        'listaDestinatarios' => $listaDestinatarios,
     ]) ?>
 
 </div>

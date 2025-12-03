@@ -100,7 +100,7 @@ class CondominioController extends Controller
         // 2. Enviar a lista para a view
         return $this->render('create', [
             'model' => $model,
-            'listaAdmins' => $listaAdmins, // <--- AQUI
+            'listaAdmins' => $listaAdmins,
         ]);
     }
 

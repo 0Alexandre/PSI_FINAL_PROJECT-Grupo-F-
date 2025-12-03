@@ -6,7 +6,7 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Mensagens $model */
 /** @var yii\widgets\ActiveForm $form */
-/** @var array $listaDestinatarios */ // <--- Esta variável vem do Controller
+/** @var array $listaDestinatarios */
 ?>
 
 <div class="mensagens-form">

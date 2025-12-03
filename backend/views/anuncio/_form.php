@@ -35,13 +35,15 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'conteudo')->textarea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'visivel_publico')->checkbox(['label' => 'Publicar Imediatamente']) ?>
-
+            <?= $form->field($model, 'visivel_publico')->dropDownList([
+                1 => 'Publicado (Visível)',
+                0 => 'Rascunho (Oculto)',
+            ])->label('Estado') ?>
         </div>
     </div>
 
     <div class="form-group mt-3">
-        <?= Html::submitButton('Publicar Anúncio', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

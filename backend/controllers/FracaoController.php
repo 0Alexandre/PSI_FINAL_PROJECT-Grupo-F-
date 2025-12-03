@@ -122,8 +122,20 @@ class FracaoController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
+        $proprietarios = User::find()
+            ->joinWith('perfil')
+            ->where(['perfil.perfil' => 'PROPRIETARIO'])
+            ->all();
+
+        $listaProprietarios = ArrayHelper::map($proprietarios, 'id', 'username');
+
         return $this->render('update', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
+            'listaProprietarios' => $listaProprietarios,
         ]);
     }
 

@@ -126,8 +126,22 @@ class MensagemController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        if (Yii::$app->user->can('sysadmin')) {
+            $users = User::find()->where(['status' => 10])->all();
+        } else {
+            $users = User::find()
+                ->joinWith('fracao.condominio')
+                ->where(['condominios.admin_id' => Yii::$app->user->id])
+                ->all();
+        }
+
+        $listaDestinatarios = ArrayHelper::map($users, 'id', function($user){
+            return $user->username . ' (' . $user->id . ')';
+        });
+
         return $this->render('update', [
             'model' => $model,
+            'listaDestinatarios' => $listaDestinatarios,
         ]);
     }
 
