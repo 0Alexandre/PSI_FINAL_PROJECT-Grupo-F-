@@ -22,18 +22,24 @@ class CondominioController extends Controller
     public function behaviors()
     {
         return [
-
             'access' => [
-                'class' => AccessControl::class,
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['sysadmin', 'adminCondominio'],
+                    ],
+
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'delete'],
                         'roles' => ['sysadmin'],
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => \yii\filters\VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],

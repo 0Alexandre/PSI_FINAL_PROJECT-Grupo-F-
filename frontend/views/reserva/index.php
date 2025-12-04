@@ -29,7 +29,6 @@ $this->title = 'Minhas Reservas';
         <?= ListView::widget([
             'dataProvider' => $dataProvider,
 
-            // Configuração da Grelha
             'options' => ['class' => 'row justify-content-center'],
             'itemOptions' => ['class' => 'col-md-6 mb-4'],
             'layout' => "{items}\n<div class='col-12 mt-4'>{pager}</div>",
@@ -46,15 +45,15 @@ $this->title = 'Minhas Reservas';
 
             'itemView' => function ($model, $key, $index, $widget) {
 
-                if ($model->estado === 'Aprovada') {
+                if ($model->estado == 'APROVADA') {
                     $statusClass = 'bg-success';
                     $statusIcon = 'fa-check-circle';
                 }
-                elseif ($model->estado === 'Rejeitada') {
+                elseif ($model->estado == 'REJEITADA') {
                     $statusClass = 'bg-danger';
                     $statusIcon = 'fa-times-circle';
                 }
-                elseif ($model->estado === 'Pendente') {
+                elseif ($model->estado == 'PENDENTE') {
                     $statusClass = 'bg-warning text-dark';
                     $statusIcon = 'fa-hourglass-half';
                 }
@@ -69,11 +68,9 @@ $this->title = 'Minhas Reservas';
                     $nomeEspaco = 'Espaço Removido';
                 }
 
-                $inicio = Yii::$app->formatter->asDate($model->inicio, 'php:d M Y') .
-                    ' <span class="text-muted">às</span> ' .
-                    Yii::$app->formatter->asTime($model->inicio, 'short');
+                $inicio = Yii::$app->formatter->asDate($model->inicio, 'php:d M Y');
 
-                $fim = Yii::$app->formatter->asTime($model->fim, 'short');
+                $fim = Yii::$app->formatter->asTime($model->fim, 'php:d M Y');
 
                 return "
             <div class='card h-100 shadow-sm border-0 rounded-4 hover-shadow transition'>
