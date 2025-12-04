@@ -31,7 +31,6 @@ class UserController extends Controller
                     ],
                 ],
             ],
-            // Mantém o VerbFilter para segurança do Delete
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [

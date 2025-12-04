@@ -15,7 +15,7 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
 <div class="container py-4 mt-4 fade-in-up" style="max-width: 1000px;">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark mb-0">Mensagens</h2>
+        <h2 class="fw-bold text-light mb-0">Mensagens</h2>
         <a href="<?= Url::to(['create']) ?>" class="btn btn-success shadow-sm px-4 rounded-pill">
             <i class="fas fa-pen me-2"></i> Escrever Nova
         </a>

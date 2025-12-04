@@ -2,9 +2,10 @@
 
 namespace frontend\controllers;
 
-use Yii; // <--- Importante para usar Yii::$app
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use common\models\Perfil;
 
 class PerfilController extends Controller
 {
@@ -13,49 +14,51 @@ class PerfilController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'denyCallback' => function () {
-                    return $this->redirect(['/site/login']);
-                },
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['proprietario'],
-                        'actions' => ['index', 'update'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
         ];
     }
 
-    // Ação para mostrar o perfil
+
     public function actionIndex()
     {
-        // 1. Vai buscar os dados do utilizador logado à BD
-        $model = Yii::$app->user->identity;
+        $user = Yii::$app->user->identity;
 
-        // 2. Envia esses dados ($model) para a view 'index'
+        if ($user->perfil) {
+            $perfil = $user->perfil;
+        } else {
+            $perfil = new Perfil();
+            $perfil->user_id = $user->id;
+        }
+
+        if ($this->request->isPost) {
+            if ($perfil->load($this->request->post()) && $perfil->save()) {
+                Yii::$app->session->setFlash('success', 'Dados atualizados com sucesso!');
+                return $this->refresh();
+            }
+        }
+
         return $this->render('index', [
-            'model' => $model,
+            'user' => $user,
+            'perfil' => $perfil,
         ]);
     }
 
-    // Ação para processar o formulário de edição
-    // Nota: Mudei o nome de 'actionEditar' para 'actionUpdate' porque na View
-    // definimos o formulário com 'action' => ['update']
     public function actionUpdate()
     {
         $model = Yii::$app->user->identity;
 
-        // Se o formulário foi submetido (POST) e os dados carregados com sucesso...
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            // Define uma mensagem de sucesso para aparecer na view
             Yii::$app->session->setFlash('success', 'Perfil atualizado com sucesso!');
 
-            // Redireciona de volta para a página de perfil
             return $this->redirect(['index']);
         }
 
-        // Se houver erro ou não for POST, volta ao index
         return $this->redirect(['index']);
     }
 }

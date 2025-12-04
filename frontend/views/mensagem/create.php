@@ -19,10 +19,9 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
         <a href="<?= \yii\helpers\Url::to(['index']) ?>" class="text-decoration-none text-muted small fw-bold">
             <i class="fas fa-arrow-left me-1"></i> Voltar à Caixa de Entrada
         </a>
-        <h2 class="fw-bold text-dark mt-2">Escrever Nova Mensagem</h2>
+        <h2 class="fw-bold text-light mt-2">Escrever Nova Mensagem</h2>
     </div>
 
-    <!-- 2. CARTÃO DO FORMULÁRIO -->
     <div class="modern-card bg-white p-4 p-md-5 rounded-3 shadow-sm border">
 
         <?php $form = ActiveForm::begin([
@@ -32,7 +31,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
 
         <div class="row g-4">
 
-            <!-- CAMPO: PARA QUEM? (Dropdown) -->
             <div class="col-12">
                 <?= $form->field($model, 'destinatario_id')->dropDownList(
                     ArrayHelper::map($destinatarios, 'id', 'username'), // Cria a lista [id => nome]
@@ -44,7 +42,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
                 )->label('<i class="fas fa-user me-2 text-success"></i>Para:', ['class' => 'form-label fw-bold text-muted small text-uppercase']) ?>
             </div>
 
-            <!-- CAMPO: ASSUNTO -->
             <div class="col-12">
                 <?= $form->field($model, 'assunto')->textInput([
                     'placeholder' => 'Ex: Reunião de Condomínio',
@@ -53,7 +50,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
                 ])->label('<i class="fas fa-heading me-2 text-success"></i>Assunto:', ['class' => 'form-label fw-bold text-muted small text-uppercase']) ?>
             </div>
 
-            <!-- CAMPO: MENSAGEM (TextArea) -->
             <div class="col-12">
                 <?= $form->field($model, 'corpo')->textarea([
                     'rows' => 8,
@@ -63,7 +59,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
                 ])->label('<i class="fas fa-align-left me-2 text-success"></i>Mensagem:', ['class' => 'form-label fw-bold text-muted small text-uppercase']) ?>
             </div>
 
-            <!-- BOTÕES DE AÇÃO -->
             <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
                 <a href="<?= \yii\helpers\Url::to(['index']) ?>" class="btn btn-light px-4 rounded-pill fw-bold text-muted">
                     Cancelar

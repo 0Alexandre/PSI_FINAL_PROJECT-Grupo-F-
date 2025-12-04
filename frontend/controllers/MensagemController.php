@@ -17,11 +17,11 @@ class MensagemController extends \yii\web\Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::class,
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['proprietario'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

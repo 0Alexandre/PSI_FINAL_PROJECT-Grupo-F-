@@ -10,35 +10,18 @@ class ReservaController extends \yii\web\Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::class,
-                'denyCallback' => function () {
-                    return $this->redirect(['/site/login']);
-                },
+                'class' => \yii\filters\AccessControl::class,
                 'rules' => [
-
-                    // PROPRIETÁRIO — ACESSO PERMITIDO
                     [
                         'allow' => true,
-                        'roles' => ['proprietario'],
-                        'actions' => [
-                            'index',
-                            'minhas-reservas',
-                            'criar-reserva',
-                            'cancelar'
-                        ],
+                        'roles' => ['@'],
                     ],
-
-                    // VISITANTE — NUNCA PODE ACEDER
-                    [
-                        'allow' => false,
-                        'roles' => ['?'], // não autenticado
-                    ],
-
-                    // ADMIN_CONDOMINIO E SYS_ADMIN → BLOQUEADOS NO FRONTEND
-                    [
-                        'allow' => false,
-                        'roles' => ['adminCondominio', 'sysadmin'],
-                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => \yii\filters\VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
             ],
         ];

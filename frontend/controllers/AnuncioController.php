@@ -13,28 +13,10 @@ class AnuncioController extends \yii\web\Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'denyCallback' => function () {
-                    return $this->redirect(['/site/login']);
-                },
                 'rules' => [
-
                     [
                         'allow' => true,
-                        'roles' => ['proprietario'],
-                        'actions' => [
-                            'index',
-                            'view',
-                        ],
-                    ],
-
-                    [
-                        'allow' => false,
-                        'roles' => ['?'],
-                    ],
-
-                    [
-                        'allow' => false,
-                        'roles' => ['adminCondominio', 'sysadmin'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],

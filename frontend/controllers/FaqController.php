@@ -9,7 +9,6 @@ use yii\filters\AccessControl;
 
 class FaqController extends Controller
 {
-    // 1. Segurança: Só utilizadores logados podem ver
     public function behaviors()
     {
         return [
@@ -18,7 +17,7 @@ class FaqController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'], // '@' = Logado
+                        'roles' => ['@'],
                     ],
                 ],
             ],
