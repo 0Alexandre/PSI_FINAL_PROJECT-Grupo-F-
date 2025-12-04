@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\User;
+use yii\filters\AccessControl;
 use Yii;
 use yii\helpers\ArrayHelper;
 
@@ -28,7 +29,7 @@ class MensagemController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['adminCondominio'],
+                        'roles' => ['adminCondominio', 'sysadmin'],
                     ],
                 ],
             ],

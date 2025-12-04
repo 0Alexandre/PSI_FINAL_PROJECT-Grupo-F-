@@ -93,16 +93,21 @@ class MensagemController extends \yii\web\Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-
         $userId = Yii::$app->user->id;
 
-        // Segurança: Só vejo se for remetente ou destinatário
         if ($model->remetente_id != $userId && $model->destinatario_id != $userId) {
             throw new \yii\web\ForbiddenHttpException('Não tem permissão para ver esta mensagem.');
         }
 
+        if ($model->remetente) {
+            $remetenteNome = $model->remetente->username;
+        } else {
+            $remetenteNome = 'Utilizador #' . $model->remetente_id;
+        }
+
         return $this->render('view', [
             'model' => $model,
+            'remetenteNome' => $remetenteNome,
         ]);
     }
 

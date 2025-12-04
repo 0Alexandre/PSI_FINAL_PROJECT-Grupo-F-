@@ -36,7 +36,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/perfil.css');
                         <div>
                             <span class="badge bg-light text-primary border px-3 py-1 rounded-pill text-uppercase">
                                 <?php
-                                // IF para o Tipo de Perfil
                                 if ($perfil->perfil) {
                                     echo Html::encode($perfil->perfil);
                                 } else {
@@ -55,7 +54,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/perfil.css');
                             <p class="text-muted mb-3">
                                 <i class="fas fa-phone me-3 text-center" style="width: 20px"></i>
                                 <?php
-                                // IF para o Telefone
                                 if ($perfil->telefone) {
                                     echo Html::encode($perfil->telefone);
                                 } else {
@@ -67,7 +65,6 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/perfil.css');
                             <p class="text-muted mb-0">
                                 <i class="fas fa-map-marker-alt me-3 text-center" style="width: 20px"></i>
                                 <?php
-                                // IF para a Morada
                                 if ($perfil->morada) {
                                     echo Html::encode($perfil->morada);
                                 } else {

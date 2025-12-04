@@ -5,56 +5,60 @@ use yii\helpers\Url;
 
 /** @var yii\web\View $this */
 /** @var common\models\Mensagens $model */
+/** @var string $remetenteNome */
 
 $this->title = $model->assunto;
-$this->registerCssFile(Yii::getAlias('@web') . '/css/mensagens.css');
 ?>
 
-<div class="container py-4 mt-4 fade-in-up" style="max-width: 900px;">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
 
-    <a href="<?= Url::to(['index']) ?>" class="text-decoration-none text-muted mb-4 d-inline-block fw-bold" style="font-size: 0.9rem;">
-        <i class="fas fa-arrow-left me-2"></i> Voltar à Caixa de Entrada
-    </a>
+            <div class="mb-4">
+                <a href="<?= Url::to(['index']) ?>" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm text-light">
+                    <i class="fas fa-arrow-left me-2 text-light"></i> Voltar à Caixa de Entrada
+                </a>
+            </div>
 
-    <div class="modern-card p-0 overflow-hidden border-0 shadow-lg bg-white rounded-3">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
 
-        <div class="bg-light border-bottom p-5 text-center position-relative overflow-hidden">
+                <div class="card-header bg-light border-0 p-5 text-center position-relative">
 
-            <div style="position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: rgba(16, 185, 129, 0.05); border-radius: 50%;"></div>
+                    <div class="mb-3 text-primary">
+                        <i class="fas fa-user-circle fa-4x"></i>
+                    </div>
 
-            <div class="d-flex justify-content-center mb-3">
-                <div class="msg-avatar" style="width: 80px; height: 80px; font-size: 2rem; background: linear-gradient(135deg, #10b981, #3b82f6); color: white; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);">
-                    <?= strtoupper(substr($model->remetente ? $model->remetente->username : 'U', 0, 1)) ?>
+                    <h2 class="fw-bold text-dark mb-3"><?= Html::encode($model->assunto) ?></h2>
+
+                    <div class="d-flex justify-content-center flex-wrap gap-2">
+                        <span class="badge bg-white text-dark border rounded-pill py-2 px-3 shadow-sm fw-normal">
+                            <i class="far fa-user me-2 text-success"></i>
+                            De: <strong><?= Html::encode($remetenteNome) ?></strong>
+                        </span>
+
+                        <span class="badge bg-white text-dark border rounded-pill py-2 px-3 shadow-sm fw-normal">
+                            <i class="far fa-clock me-2 text-primary"></i>
+                            <?= Yii::$app->formatter->asDate($model->data_envio, 'long') ?>
+                            às
+                            <?= Yii::$app->formatter->asTime($model->data_envio, 'short') ?>
+                        </span>
+                    </div>
                 </div>
+
+                <div class="card-body p-5">
+                    <div class="text-secondary" style="font-size: 1.1rem; line-height: 1.8; white-space: pre-wrap;">
+                        <?= Html::encode($model->corpo) ?>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent border-top p-4 d-flex justify-content-between align-items-center">
+                    <span class="text-muted small">
+                        <i class="fas fa-shield-alt me-1 text-success"></i> Mensagem Segura
+                    </span>
+                </div>
+
             </div>
 
-            <h2 class="fw-bold text-dark mb-2"><?= Html::encode($model->assunto) ?></h2>
-
-            <div class="text-muted d-flex justify-content-center align-items-center gap-3 small mt-3">
-                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill fw-normal shadow-sm">
-                    <i class="far fa-user me-2 text-success"></i> 
-                    De: <strong><?= Html::encode($model->remetente ? $model->remetente->username : 'Desconhecido') ?></strong>
-                </span>
-
-                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill fw-normal shadow-sm">
-                    <i class="far fa-calendar-alt me-2 text-primary"></i> 
-                    <?= Yii::$app->formatter->asDate($model->data_envio, 'long') ?> 
-                    às <?= Yii::$app->formatter->asTime($model->data_envio, 'short') ?>
-                </span>
-            </div>
         </div>
-
-        <div class="p-5">
-            <div class="text-dark" style="font-size: 1.05rem; line-height: 1.8; white-space: pre-wrap; font-family: 'Georgia', serif; color: #334155;">
-                <?= Html::encode($model->corpo) ?>
-            </div>
-        </div>
-
-        <div class="bg-light p-4 border-top d-flex justify-content-between align-items-center">
-            <span class="text-muted small">
-                <i class="fas fa-shield-alt me-1"></i> Mensagem Segura do DomusGestLink
-            </span>
-        </div>
-
     </div>
 </div>

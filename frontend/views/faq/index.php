@@ -4,7 +4,7 @@ $this->title = 'Perguntas Frequentes';
 ?>
 
 <div class="container mt-5">
-    <h1 class="text-center mb-4 text-primary"><i class="fas fa-question-circle"></i> FAQ</h1>
+    <h1 class="text-center mb-4 text-primary text-light"><i class="fas fa-question-circle text-light"></i> FAQ</h1>
 
     <?php if (empty($faqs)): ?>
         <div class="alert alert-info text-center">Sem perguntas disponíveis.</div>
