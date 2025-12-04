@@ -38,7 +38,7 @@ class EspacoComum extends \yii\db\ActiveRecord
             [['condominio_id'], 'integer'],
             [['descricao'], 'string'],
             [['nome'], 'string', 'max' => 100],
-            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominios::class, 'targetAttribute' => ['condominio_id' => 'id']],
+            [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominio::class, 'targetAttribute' => ['condominio_id' => 'id']],
         ];
     }
 
@@ -62,7 +62,7 @@ class EspacoComum extends \yii\db\ActiveRecord
      */
     public function getCondominio()
     {
-        return $this->hasOne(Condominios::class, ['id' => 'condominio_id']);
+        return $this->hasOne(Condominio::class, ['id' => 'condominio_id']);
     }
 
     /**

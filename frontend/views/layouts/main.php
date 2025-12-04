@@ -61,7 +61,7 @@ AppAsset::register($this);
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link disabled" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
+                                <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
                             </li>
 
                             <li class="nav-item">

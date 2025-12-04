@@ -9,6 +9,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\Condominio;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+
 
 class FaqController extends Controller
 {

@@ -2,11 +2,14 @@
 
 namespace backend\controllers;
 
+use common\models\EspacoComum;
 use common\models\Reserva;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.

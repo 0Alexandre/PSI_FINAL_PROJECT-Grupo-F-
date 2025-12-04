@@ -9,6 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use common\models\User;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
 
 /**
  * CondominioController implements the CRUD actions for Condominio model.

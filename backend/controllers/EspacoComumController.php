@@ -2,11 +2,14 @@
 
 namespace backend\controllers;
 
+use common\models\Condominio;
 use common\models\EspacoComum;
 use yii\data\ActiveDataProvider;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * EspacoComumController implements the CRUD actions for EspacoComum model.
@@ -94,8 +97,12 @@ class EspacoComumController extends Controller
             $model->loadDefaultValues();
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
         return $this->render('create', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 
@@ -114,8 +121,12 @@ class EspacoComumController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
+        $condominios = Condominio::find()->all();
+        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+
         return $this->render('update', [
             'model' => $model,
+            'listaCondominios' => $listaCondominios,
         ]);
     }
 

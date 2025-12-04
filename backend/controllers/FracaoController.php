@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use common\models\Condominio;
 use yii\helpers\ArrayHelper;
 use common\models\User;
+use yii\filters\AccessControl;
 
 /**
  * FracaoController implements the CRUD actions for Fracao model.

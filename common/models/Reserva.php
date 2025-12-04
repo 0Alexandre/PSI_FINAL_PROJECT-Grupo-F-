@@ -41,13 +41,13 @@ class Reserva extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['estado'], 'default', 'value' => 'PENDENTE'],
-            [['espaco_id', 'utilizador_id', 'inicio', 'fim'], 'required'],
+            [['espaco_id', 'utilizador_id', 'inicio', 'fim'], 'required', 'message' => 'Campo obrigatório'],
             [['espaco_id', 'utilizador_id'], 'integer'],
-            [['inicio', 'fim'], 'safe'],
             [['estado'], 'string'],
-            ['estado', 'in', 'range' => array_keys(self::optsEstado())],
-            [['espaco_id'], 'exist', 'skipOnError' => true, 'targetClass' => EspacosComuns::class, 'targetAttribute' => ['espaco_id' => 'id']],
+            [['inicio', 'fim'], 'safe'],
+            ['estado', 'default', 'value' => 'Pendente'],
+            ['fim', 'compare', 'compareAttribute' => 'inicio', 'operator' => '>', 'message' => 'A data de fim deve ser depois do início.'],
+            [['espaco_id'], 'exist', 'skipOnError' => true, 'targetClass' => EspacoComum::class, 'targetAttribute' => ['espaco_id' => 'id']],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['utilizador_id' => 'id']],
         ];
     }
@@ -74,7 +74,7 @@ class Reserva extends \yii\db\ActiveRecord
      */
     public function getEspaco()
     {
-        return $this->hasOne(EspacosComuns::class, ['id' => 'espaco_id']);
+        return $this->hasOne(EspacoComum::class, ['id' => 'espaco_id']);
     }
 
     /**

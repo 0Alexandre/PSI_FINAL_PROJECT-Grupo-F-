@@ -1,172 +1,110 @@
 <?php
-/** @var yii\web\View $this */
-use yii\helpers\Url;
+
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\widgets\ListView;
 
-$this->title = 'DomusGestLink - Reserva';
+/** @var yii\web\View $this */
+/** @var yii\data\ActiveDataProvider $dataProvider */
 
+$this->title = 'Minhas Reservas';
 ?>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="<?= Yii::getAlias('@web') ?>/images/logo.png" alt="DomusGestLink" class="me-3" />
-            <span class="brand-text">DomusGestLink</span>
+<div class="container py-5" style="max-width: 900px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-bold text-primary mb-0 text-light">
+                <i class="fas fa-calendar-alt me-2 text-light"></i> Minhas Reservas
+            </h2>
+            <p class="text-light mb-0">Consulte o histórico e o estado dos seus pedidos.</p>
+        </div>
+
+        <a href="<?= Url::to(['create']) ?>" class="btn btn-success rounded-pill px-4 py-2 shadow-sm fw-bold">
+            <i class="fas fa-plus me-2"></i> Nova Reserva
         </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-
-                <?php if (Yii::$app->user->isGuest): ?>
-
-                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#servicos">Funcionalidades</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#app">App Mobile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
-
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold" href="<?= Url::to(['site/login']) ?>">Login</a>
-                    </li>
-
-                <?php else: ?>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/reserva/index']) ?>">Reservas</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/anuncio/index']) ?>">Anuncios</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/.../index']) ?>">Mensagens</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= Url::to(['/perfil/index']) ?>">O Meu Perfil</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <?= Html::beginForm(['/site/logout'], 'post')
-                        . Html::submitButton(
-                            'Logout',
-                            ['class' => 'nav-link btn btn-link fw-bold logout']
-                        )
-                        . Html::endForm()
-                        ?>
-                    </li>
-
-                <?php endif; ?>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- SEÇÃO 1: Hero & Ação Principal -->
-<section class="hero-section text-center text-md-start">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-8">
-                <h1 class="display-5 fw-bold">Reservas de Espaços Comuns</h1>
-                <p class="lead text-muted">Verifique as suas reservas e efetue novas marcações de forma rápida e simples.</p>
-            </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <?= Html::a(
-                    '<i class="bi bi-calendar-plus"></i> Nova Reserva',
-                    ['create'],
-                    ['class' => 'btn btn-primary btn-lg px-4 shadow-sm']
-                ) ?>
-            </div>
-        </div>
-    </div>
-</section>
-
-<div class="container pb-5">
-
-    <!-- SEÇÃO 2: Minhas Reservas (Tabela) -->
-    <div class="row mb-5">
-        <div class="col-12">
-            <h3 class="mb-3 border-bottom pb-2">Minhas Reservas</h3>
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0 align-middle">
-                            <thead class="table-light">
-                            <tr>
-                                <th scope="col" class="ps-4">Data</th>
-                                <th scope="col">Espaço</th>
-                                <th scope="col">Estado</th>
-                                <th scope="col" class="text-end pe-4">Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if (!empty($minhasReservas)): ?>
-                                <?php foreach ($minhasReservas as $reserva): ?>
-                                    <tr>
-                                        <td class="ps-4 fw-bold text-secondary"><?= Html::encode($reserva['data']) ?></td>
-                                        <td><?= Html::encode($reserva['espaco']) ?></td>
-                                        <td>
-                                            <span class="badge bg-<?= $reserva['class'] ?> badge-status rounded-pill">
-                                                <?= Html::encode($reserva['estado']) ?>
-                                            </span>
-                                        </td>
-                                        <td class="text-end pe-4">
-                                            <?= Html::a('Detalhes', ['view', 'id' => $reserva['id']], ['class' => 'btn btn-sm btn-outline-primary']) ?>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="4" class="text-center py-4 text-muted">Ainda não tens reservas efetuadas.</td>
-                                </tr>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-    <!-- Espaços Disponíveis  -->
     <div class="row">
-        <div class="col-12">
-            <h3 class="mb-4 border-bottom pb-2">Espaços Disponíveis</h3>
-        </div>
+        <?= ListView::widget([
+            'dataProvider' => $dataProvider,
 
-        <?php foreach ($espacosDisponiveis as $espaco): ?>
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm card-space">
-                    <!-- Placeholder para Imagem -->
-                    <div class="bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 160px;">
-                        <span class="text-muted"><i class="bi bi-image"></i> Imagem do Espaço</span>
-                    </div>
+            // Configuração da Grelha
+            'options' => ['class' => 'row justify-content-center'],
+            'itemOptions' => ['class' => 'col-md-6 mb-4'],
+            'layout' => "{items}\n<div class='col-12 mt-4'>{pager}</div>",
 
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold"><?= Html::encode($espaco['nome']) ?></h5>
-                        <p class="card-text text-muted small mb-3"><?= Html::encode($espaco['desc']) ?></p>
-
-                        <ul class="list-unstyled mb-4 small">
-                            <li class="mb-1"><i class="bi bi-people-fill me-2 text-primary"></i>Capacidade: <strong><?= $espaco['cap'] ?> pessoas</strong></li>
-                            <li><i class="bi bi-clock-fill me-2 text-primary"></i>Horário: <strong><?= $espaco['horario'] ?></strong></li>
-                        </ul>
-                    </div>
-                    <div class="card-footer bg-white border-0 pb-3">
-                        <?= Html::a('Reservar', ['create', 'espaco' => $espaco['nome']], ['class' => 'btn btn-outline-dark w-100']) ?>
-                    </div>
+            'emptyText' => '
+            <div class="col-12">
+                <div class="alert alert-light text-center p-5 border border-dashed rounded-4">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3 opacity-50"></i>
+                    <h4 class="text-muted">Ainda não tem reservas.</h4>
+                    <p class="mb-4">Aproveite os espaços comuns do seu condomínio.</p>
                 </div>
             </div>
-        <?php endforeach; ?>
+        ',
+
+            'itemView' => function ($model, $key, $index, $widget) {
+
+                if ($model->estado === 'Aprovada') {
+                    $statusClass = 'bg-success';
+                    $statusIcon = 'fa-check-circle';
+                }
+                elseif ($model->estado === 'Rejeitada') {
+                    $statusClass = 'bg-danger';
+                    $statusIcon = 'fa-times-circle';
+                }
+                elseif ($model->estado === 'Pendente') {
+                    $statusClass = 'bg-warning text-dark';
+                    $statusIcon = 'fa-hourglass-half';
+                }
+                else {
+                    $statusClass = 'bg-secondary';
+                    $statusIcon = 'fa-question-circle';
+                }
+
+                if ($model->espaco) {
+                    $nomeEspaco = $model->espaco->nome;
+                } else {
+                    $nomeEspaco = 'Espaço Removido';
+                }
+
+                $inicio = Yii::$app->formatter->asDate($model->inicio, 'php:d M Y') .
+                    ' <span class="text-muted">às</span> ' .
+                    Yii::$app->formatter->asTime($model->inicio, 'short');
+
+                $fim = Yii::$app->formatter->asTime($model->fim, 'short');
+
+                return "
+            <div class='card h-100 shadow-sm border-0 rounded-4 hover-shadow transition'>
+                <div class='card-body p-4'>
+                    
+                    <div class='d-flex justify-content-between align-items-start mb-3'>
+                        <h5 class='fw-bold text-dark mb-0'>
+                            <i class='fas fa-swimming-pool me-2 text-primary opacity-50'></i>
+                            {$nomeEspaco}
+                        </h5>
+                        <span class='badge {$statusClass} rounded-pill d-flex align-items-center gap-1'>
+                            <i class='fas {$statusIcon}'></i> {$model->estado}
+                        </span>
+                    </div>
+
+                    <div class='vstack gap-2 border-start border-3 ps-3 border-light'>
+                        <div>
+                            <small class='text-muted text-uppercase fw-bold' style='font-size: 0.7rem;'>Início</small>
+                            <div class='text-dark'>{$inicio}</div>
+                        </div>
+                        <div>
+                            <small class='text-muted text-uppercase fw-bold' style='font-size: 0.7rem;'>Fim</small>
+                            <div class='text-dark'>até {$fim}</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            ";
+            },
+        ]) ?>
     </div>
 
 </div>
-
-<section class="hero-section">
-    <h1>Reservas</h1>
-</section>
