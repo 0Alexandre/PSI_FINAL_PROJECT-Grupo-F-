@@ -95,8 +95,6 @@ class CondominioController extends Controller
     {
         $model = new Condominio();
 
-        // 1. LÓGICA NO CONTROLLER (MVC Correto)
-        // Buscar apenas users com perfil ADMIN_CONDOMINIO
         $admins = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
@@ -111,7 +109,6 @@ class CondominioController extends Controller
             $model->loadDefaultValues();
         }
 
-        // 2. Enviar a lista para a view
         return $this->render('create', [
             'model' => $model,
             'listaAdmins' => $listaAdmins,
@@ -122,7 +119,6 @@ class CondominioController extends Controller
     {
         $model = $this->findModel($id);
 
-        // REPETIR A MESMA LÓGICA PARA A EDIÇÃO
         $admins = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
@@ -135,7 +131,7 @@ class CondominioController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'listaAdmins' => $listaAdmins, // <--- AQUI TAMBÉM
+            'listaAdmins' => $listaAdmins,
         ]);
     }
 

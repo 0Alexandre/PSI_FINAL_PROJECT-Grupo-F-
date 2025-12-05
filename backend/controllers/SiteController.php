@@ -6,8 +6,8 @@ use common\models\LoginForm;
 use Yii;
 use common\models\User;
 use common\models\Perfil;
-use common\models\Condominio; // <--- NOVO
-use common\models\Fracao;     // <--- NOVO
+use common\models\Condominio;
+use common\models\Fracao;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -71,27 +71,21 @@ class SiteController extends Controller
         $userId = Yii::$app->user->id;
         $isSysAdmin = Yii::$app->user->can('sysadmin');
 
-        // --- ESTATÍSTICAS (Contagens) ---
         $totalUsers = User::find()->count();
         $admins = Perfil::find()->where(['perfil' => 'ADMIN_CONDOMINIO'])->count();
         $proprietarios = Perfil::find()->where(['perfil' => 'PROPRIETARIO'])->count();
         $sysadmins = Perfil::find()->where(['perfil' => 'SYS_ADMIN'])->count();
 
-        // --- LISTA DE CONDOMÍNIOS DO UTILIZADOR ---
-        // Aqui vamos buscar os DADOS reais, não só a contagem
         $queryMeusCondominios = Condominio::find();
 
         if (!$isSysAdmin) {
             $queryMeusCondominios->where(['admin_id' => $userId]);
         }
 
-        // Pega nos condomínios (para listar na tabela)
         $meusCondominios = $queryMeusCondominios->all();
-        // Conta-os (para o widget colorido)
         $totalCondominios = count($meusCondominios);
 
 
-        // --- CONTAGEM DE FRAÇÕES ---
         $queryFracoes = Fracao::find();
         if (!$isSysAdmin) {
             $queryFracoes->joinWith('condominio')
@@ -103,7 +97,7 @@ class SiteController extends Controller
         return $this->render('index', compact(
             'totalUsers', 'admins', 'proprietarios', 'sysadmins',
             'totalCondominios', 'totalFracoes', 'isSysAdmin',
-            'meusCondominios' // <--- Envia a lista para a view
+            'meusCondominios'
         ));
     }
     /**

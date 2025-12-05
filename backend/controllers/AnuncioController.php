@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use common\models\Condominio;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * AnuncioController implements the CRUD actions for Anuncio model.
@@ -46,6 +47,7 @@ class AnuncioController extends Controller
      *
      * @return string
      */
+    /*
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
@@ -59,7 +61,25 @@ class AnuncioController extends Controller
                     'id' => SORT_DESC,
                 ]
             ],
-            */
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    */
+
+    public function actionIndex()
+    {
+        $query = Anuncio::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->joinWith('condominio')
+                ->where(['condominios.admin_id' => Yii::$app->user->id]);
+        }
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
         ]);
 
         return $this->render('index', [
@@ -89,16 +109,22 @@ class AnuncioController extends Controller
     {
         $model = new Anuncio();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
+        $query = Condominio::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where(['admin_id' => Yii::$app->user->id]);
+        }
+
+        $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
+
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            $model->data = date('Y-m-d H:i:s');
+            if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
         }
-
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
 
         return $this->render('create', [
             'model' => $model,
