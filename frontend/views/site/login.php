@@ -8,37 +8,42 @@ $this->title = 'Login - DomusGestLink';
 $this->registerCssFile(Yii::getAlias('@web') . '/css/login.css');
 ?>
 
-<div class="container login-wrapper">
-    <div class="login-box">
+<div class="container login-wrapper d-flex justify-content-center align-items-center">
 
-        <h1 class="login-title">Entrar</h1>
-        <p class="login-desc">Aceda à sua conta do DomusGestLink</p>
+    <div class="login-box w-100" style="max-width: 400px;">
+
+        <div class="text-center mb-4">
+            <h1 class="login-title">Entrar</h1>
+            <p class="login-desc text-light">Aceda à sua conta do DomusGestLink</p>
+        </div>
 
         <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
         <?= $form->field($model, 'username')
-            ->textInput(['autofocus' => true, 'placeholder' => 'Nome de utilizador'])
+            ->textInput(['autofocus' => true, 'placeholder' => 'Nome de utilizador', 'class' => 'form-control form-control-lg'])
             ->label(false) ?>
 
         <?= $form->field($model, 'password')
-            ->passwordInput(['placeholder' => 'Palavra-passe'])
+            ->passwordInput(['placeholder' => 'Palavra-passe', 'class' => 'form-control form-control-lg'])
             ->label(false) ?>
 
-        <div class="form-check mb-2">
+        <div class="form-check mb-3">
             <?= $form->field($model, 'rememberMe')->checkbox(['class' => 'form-check-input']) ?>
         </div>
 
-        <?= Html::submitButton('Entrar', ['class' => 'btn-login', 'name' => 'login-button']) ?>
+        <div class="d-grid gap-2">
+            <?= Html::submitButton('Entrar', ['class' => 'btn btn-primary btn-lg btn-login', 'name' => 'login-button']) ?>
+        </div>
 
         <?php ActiveForm::end(); ?>
 
-        <div class="login-footer mt-3 text-center">
+        <div class="login-footer mt-4 text-center">
             <small>
                 Esqueceu a palavra-passe?
-                <?= Html::a('Recuperar', ['site/request-password-reset']) ?><br>
+                <?= Html::a('Recuperar', ['site/request-password-reset'], ['class' => 'text-decoration-none']) ?><br>
 
                 Ainda não tem conta?
-                <?= Html::a('Criar Conta', ['site/signup']) ?>
+                <?= Html::a('Criar Conta', ['site/signup'], ['class' => 'text-decoration-none fw-bold']) ?>
             </small>
         </div>
 
