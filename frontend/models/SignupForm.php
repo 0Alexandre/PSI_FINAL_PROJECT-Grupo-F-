@@ -1,21 +1,19 @@
 <?php
 
-namespace backend\models;
+namespace frontend\models;
 
+use Yii;
 use yii\base\Model;
-use yii\data\ActiveDataProvider;
 use common\models\User;
 
 /**
- * UserSearch represents the model behind the search form of `common\models\User`.
+ * Signup form
  */
-class UserSearch extends User
+class SignupForm extends Model
 {
-    // NOVAS VARIÁVEIS PARA PESQUISA (Não pertencem a User, mas a Perfil)
-    public $perfil_data;
-    public $telefone;
-    public $morada;
-    public $data_nascimento;
+    public $username;
+    public $email;
+    public $password;
 
     /**
      * {@inheritdoc}
@@ -23,71 +21,41 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            // Removidas as colunas antigas da tabela User que já não existem
-            [['id', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'verification_token',
+            ['username', 'trim'],
+            ['username', 'required'],
+            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'string', 'min' => 2, 'max' => 255],
 
-                // NOVAS VARIÁVEIS DE PESQUISA (Têm de estar nas rules)
-                'perfil_data', 'telefone', 'morada', 'data_nascimento'], 'safe'],
+            ['email', 'trim'],
+            ['email', 'required'],
+            ['email', 'email'],
+            ['email', 'string', 'max' => 255],
+            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+
+            ['password', 'required'],
+            ['password', 'string', 'min' => 6],
         ];
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function scenarios()
-    {
-        // bypass scenarios() implementation in the parent class
-        return Model::scenarios();
-    }
-
-    /**
-     * Creates data provider instance with search query applied
+     * Signs user up.
      *
-     * @param array $params
-     * @param string|null $formName Form name to be used into `->load()` method.
-     *
-     * @return ActiveDataProvider
+     * @return bool whether the creating new account was successful and email was sent
      */
-    public function search($params, $formName = null)
+    public function signup()
     {
-        // AQUI ESTÁ O SEGREDO: Fazer o JOIN com a tabela 'perfil'
-        $query = User::find()->joinWith(['perfil']);
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        $this->load($params, $formName);
-
         if (!$this->validate()) {
-            return $dataProvider;
+            return null;
         }
 
-        // grid filtering conditions
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            // 'data_nascimento' => $this->data_nascimento, // Não pode ser aqui, tem que ser na tabela 'perfil'
+        $user = new User();
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        $user->generateEmailVerificationToken();
+        $user->status = 10;
 
-            // FILTROS ESPECÍFICOS:
-            'perfil.data_nascimento' => $this->data_nascimento, // Pesquisar na tabela perfil
-        ]);
-
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'verification_token', $this->verification_token])
-
-            // NOVO: Filtros para a Tabela 'perfil'
-            ->andFilterWhere(['like', 'perfil.perfil', $this->perfil_data]) // Assumi que o perfil tem agora o nome perfil_data
-            ->andFilterWhere(['like', 'perfil.telefone', $this->telefone])
-            ->andFilterWhere(['like', 'perfil.morada', $this->morada]);
-
-        return $dataProvider;
+        return $user->save();
     }
 }

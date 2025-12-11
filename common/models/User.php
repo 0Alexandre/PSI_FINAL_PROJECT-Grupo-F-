@@ -31,7 +31,6 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
 
-
     /**
      * {@inheritdoc}
      */
@@ -59,15 +58,15 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
 
-            // CAMPOS PARA O BACKOFFICE
-            [['username', 'email', 'perfil', 'telefone', 'morada'], 'string'],
+            [['username', 'email'], 'string'],
             [['username', 'email'], 'required'],
 
-            // ROLE virtual (não está na BD)
+            ['email', 'email'],
+            [['username', 'email'], 'unique'],
+
             ['role', 'safe'],
         ];
     }
-
 
     /**
      * {@inheritdoc}
@@ -79,10 +78,13 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * {@inheritdoc}
+     * CORREÇÃO 2: Implementação necessária para a API funcionar (QueryParamAuth)
+     * Conforme Ficha 5
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        // Procura um utilizador que tenha este auth_key e esteja ativo
+        return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**
@@ -221,9 +223,10 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
+    // RELAÇÕES
+
     public function getPerfil()
     {
-        // 'user_id' é a coluna na tabela perfil que liga ao ID do user
         return $this->hasOne(\common\models\Perfil::class, ['user_id' => 'id']);
     }
 
@@ -238,13 +241,10 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getCondominio()
     {
-        // 1. Tenho fração?
         if ($this->fracao) {
-            // 2. Se sim, devolve o condomínio dessa fração
             return $this->fracao->condominio;
         }
 
-        // 3. Se não, devolve null
         return null;
     }
 }
