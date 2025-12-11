@@ -11,7 +11,11 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\ModuleAPI',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -47,8 +51,20 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/user',
+                    'api/condominio',
+                    'api/fracao',
+                    'api/anuncio',
+                    'api/reserva',
+                    'api/reuniao',
+                    'api/mensagem',
+                    'api/espaco-comum',
             ],
+            'pluralize' => false,
         ],
+    ],
+],
     ],
 
     'layout' => 'main-adminlte',

@@ -49,19 +49,17 @@ class MensagemController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Mensagens::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $query = Mensagens::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where([
+                'OR',
+                ['destinatario_id' => Yii::$app->user->id],
+                ['remetente_id' => Yii::$app->user->id]
+            ]);
+        }
+
+        $dataProvider = new \yii\data\ActiveDataProvider(['query' => $query,]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

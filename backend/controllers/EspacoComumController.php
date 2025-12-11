@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * EspacoComumController implements the CRUD actions for EspacoComum model.
@@ -48,19 +49,14 @@ class EspacoComumController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => EspacoComum::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $query = EspacoComum::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->joinWith('condominio')
+                ->where(['condominios.admin_id' => Yii::$app->user->id]);
+        }
+
+        $dataProvider = new \yii\data\ActiveDataProvider(['query' => $query,]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

@@ -10,6 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * ReservaController implements the CRUD actions for Reserva model.
@@ -48,19 +49,14 @@ class ReservaController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Reserva::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $query = Reserva::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->joinWith('espaco.condominio')
+                ->where(['condominios.admin_id' => Yii::$app->user->id]);
+        }
+
+        $dataProvider = new \yii\data\ActiveDataProvider(['query' => $query,]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

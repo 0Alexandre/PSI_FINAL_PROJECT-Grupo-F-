@@ -11,6 +11,7 @@ use common\models\Condominio;
 use yii\helpers\ArrayHelper;
 use common\models\User;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * FracaoController implements the CRUD actions for Fracao model.
@@ -49,19 +50,14 @@ class FracaoController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Fracao::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
-        ]);
+        $query = Fracao::find();
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->joinWith('condominio')
+                ->andWhere(['condominios.admin_id' => Yii::$app->user->id]);
+        }
+
+        $dataProvider = new ActiveDataProvider(['query' => $query]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,

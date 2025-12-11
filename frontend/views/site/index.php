@@ -6,7 +6,7 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = 'DomusGestLink - Gestão de Condomínios';
+$this->title = 'DomusGestLink - Dashboard';
 ?>
 
 <?php if (Yii::$app->user->isGuest): ?>
@@ -28,109 +28,116 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
     <section class="about-section" id="sobre">
         <div class="container">
             <h2>Sobre o DomusGestLink</h2>
-            <p>
-                O DomusGestLink é uma plataforma de gestão de condomínios desenvolvida por estudantes
-                do Politécnico de Leiria. Permite aos administradores e proprietários gerir frações,
-                reservas, anúncios e muito mais — tanto no site quanto na app mobile.
-            </p>
-        </div>
-    </section>
-
-    <section class="features-section" id="servicos">
-        <div class="container">
-            <h2 class="section-title">Funcionalidades Principais</h2>
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-building"></i>
-                        <h5>Gestão de Condomínios</h5>
-                        <p>Controle frações, proprietários e espaços comuns com facilidade e segurança.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-calendar-check"></i>
-                        <h5>Reservas Online</h5>
-                        <p>Reserve espaços comuns em tempo real, diretamente do site ou app mobile.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="feature-card">
-                        <i class="fas fa-bullhorn"></i>
-                        <h5>Anúncios e Avisos</h5>
-                        <p>Receba comunicados importantes e mantenha-se atualizado com o seu condomínio.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="app-section" id="app">
-        <div class="container text-center">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-md-start mb-4 mb-md-0">
-                    <h2>Aplicação Móvel</h2>
-                    <p>
-                        Aceda rapidamente às informações do seu condomínio através da aplicação DomusGestLink,
-                        disponível para Android. Faça reservas, leia comunicados e receba notificações
-                        instantâneas.
-                    </p>
-                    <button class="btn-app">
-                        <i class="fa-brands fa-google-play me-2"></i>Em breve na Play Store
-                    </button>
-                    <br />
-                </div>
-                <div class="col-md-6 text-center">
-                    <img src="<?= Yii::getAlias('@web') ?>/images/logo_completo.png" alt="App DomusGestLink" class="app-mockup img-fluid" />
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="faq-section" id="faq">
-        <div class="container">
-            <h2 class="mb-5">Perguntas Frequentes</h2>
-            <div class="faq-item">
-                <h5>O que é o DomusGestLink?</h5>
-                <p>É uma plataforma digital para gestão e comunicação de condomínios, disponível na web e app mobile.</p>
-            </div>
-            <div class="faq-item">
-                <h5>Quem pode utilizar?</h5>
-                <p>Administradores e proprietários registados no sistema.</p>
-            </div>
-            <div class="faq-item">
-                <h5>Preciso instalar algo?</h5>
-                <p>Sim, existe uma aplicação mobile complementar para Android — ideal para receber notificações e aceder rapidamente.</p>
-            </div>
+            <p>O DomusGestLink é uma plataforma de gestão de condomínios...</p>
         </div>
     </section>
 
 <?php else: ?>
 
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
 
         <?php if (isset($meuCondominio) && $meuCondominio): ?>
 
-            <div class="d-flex align-items-center vh-100">
-                <div class="container">
+            <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
+                <div class="container-fluid py-3">
+                    <h1 class="display-5 fw-bold text-primary">
+                        <i class="fas fa-building"></i> <?= Html::encode($meuCondominio->nome) ?>
+                    </h1>
+                    <p class="col-md-8 fs-4">Olá, <strong><?= Yii::$app->user->identity->username ?></strong>. Bem-vindo a casa.</p>
+                    <hr class="my-4">
 
-                    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
-                        <div class="container-fluid py-3">
-                            <h1 class="display-5 fw-bold text-primary">
-                                <i class="fas fa-building"></i> <?= Html::encode($meuCondominio->nome) ?>
-                            </h1>
-                            <p class="col-md-8 fs-4">Olá, <strong><?= Yii::$app->user->identity->username ?></strong>. Bem-vindo a casa.</p>
-                            <hr class="my-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-home"></i> A sua Fração:</h5>
+                            <p class="lead"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5><i class="fas fa-map-marker-alt"></i> Morada:</h5>
+                            <p class="lead"><?= Html::encode($meuCondominio->morada) ?></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-home"></i> A sua Fração:</h5>
-                                    <p class="lead"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <h5><i class="fas fa-map-marker-alt"></i> Morada:</h5>
-                                    <p class="lead"><?= Html::encode($meuCondominio->morada) ?></p>
-                                </div>
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <a href="<?= Url::to(['comunicado/index']) ?>" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card border-0 bg-primary text-white">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-bullhorn fa-3x mb-3"></i>
+                                <h4 class="card-title">Comunicados</h4>
+                                <p class="card-text">Veja os últimos avisos e atas de reuniões.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="<?= Url::to(['reserva/create']) ?>" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card border-0 bg-success text-white">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-calendar-plus fa-3x mb-3"></i>
+                                <h4 class="card-title">Reservar Espaço</h4>
+                                <p class="card-text">Agende o uso da sala de reuniões ou piscina.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="<?= Url::to(['mensagem/create']) ?>" class="text-decoration-none">
+                        <div class="card h-100 shadow-sm hover-card border-0 bg-info text-white">
+                            <div class="card-body text-center p-4">
+                                <i class="fas fa-envelope-open-text fa-3x mb-3"></i>
+                                <h4 class="card-title">Contactar Admin</h4>
+                                <p class="card-text">Reporte avarias ou envie mensagens à gestão.</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                            <h5 class="fw-bold"><i class="fas fa-bell text-warning me-2"></i> Quadro de Avisos</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-start border-0 px-0">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Manutenção do Elevador</div>
+                                        Próxima terça-feira, das 10h às 12h.
+                                    </div>
+                                    <span class="badge bg-primary rounded-pill">Novo</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-start border-0 px-0">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">Reunião de Condomínio</div>
+                                        Agendada para dia 25/12.
+                                    </div>
+                                    <span class="badge bg-secondary rounded-pill">Info</span>
+                                </li>
+                            </ul>
+                            <div class="mt-3 text-end">
+                                <a href="<?= Url::to(['comunicado/index']) ?>" class="btn btn-sm btn-outline-primary">Ver todos</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                            <h5 class="fw-bold"><i class="fas fa-clock text-success me-2"></i> Próximas Reservas</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-light border text-center">
+                                <p class="mb-0 text-muted">Não tem reservas ativas para os próximos dias.</p>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <a href="<?= Url::to(['reserva/index']) ?>" class="btn btn-outline-success">
+                                    <i class="fas fa-list"></i> Gerir as minhas reservas
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -153,6 +160,17 @@ $this->title = 'DomusGestLink - Gestão de Condomínios';
         <?php endif; ?>
 
     </div>
+
+    <style>
+        .hover-card {
+            transition: transform 0.2s;
+        }
+        .hover-card:hover {
+            transform: translateY(-5px);
+            cursor: pointer;
+            opacity: 0.9;
+        }
+    </style>
 
 <?php endif; ?>
 
