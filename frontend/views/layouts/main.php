@@ -113,15 +113,11 @@ AppAsset::register($this);
 
     <main class="flex-shrink-0">
         <?php
-        // 1. Verifica se estamos na Homepage
         $isHomePage = Yii::$app->controller->id == 'site' && Yii::$app->controller->action->id == 'index';
 
-        // 2. Decide qual a classe CSS a usar (com IF/ELSE)
         if ($isHomePage) {
-            // Se for a Home: Ocupa a largura toda e sem margens (para o Hero)
             $classeCss = 'container-fluid p-0';
         } else {
-            // Se for outra página: Centrado e com margem no topo (para não ficar debaixo do menu)
             $classeCss = 'container mt-5 pt-5';
         }
         ?>
