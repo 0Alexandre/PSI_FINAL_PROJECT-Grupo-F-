@@ -10,7 +10,7 @@ $this->title = 'O Meu Perfil';
 $this->registerCssFile(Yii::getAlias('@web') . '/css/perfil.css');
 ?>
 
-<div class="profile-wrapper fade-in-up mt-5">
+<div class="profile-wrapper fade-in-upmt-3">
 
     <div class="container" style="max-width: 1000px;">
 

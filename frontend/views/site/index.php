@@ -127,30 +127,111 @@ $this->title = 'DomusGestLink - Dashboard';
 
 <?php else: ?>
 
-    <div class="container mt-5 mb-5">
+    <div class="container py-5 mt-5">
 
         <?php if (isset($meuCondominio) && $meuCondominio): ?>
 
-            <div class="p-5 mb-4 bg-light rounded-3 shadow-sm border">
-                <div class="container-fluid py-3">
-                    <h1 class="display-5 fw-bold text-primary">
-                        <i class="fas fa-building"></i> <?= Html::encode($meuCondominio->nome) ?>
-                    </h1>
-                    <p class="col-md-8 fs-4">Olá, <strong><?= Yii::$app->user->identity->username ?></strong>. Bem-vindo a casa.</p>
-                    <hr class="my-4">
+            <div class="p-5 mb-4 bg-primary bg-gradient text-white rounded-4 shadow overflow-hidden">
+                <div class="container-fluid py-2">
+                    <div class="row align-items-center">
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-home"></i> A sua Fração:</h5>
-                            <p class="lead"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></p>
+                        <div class="col-md-8">
+                            <h1 class="display-5 fw-bold">Olá, <?= Html::encode(Yii::$app->user->identity->username) ?> 👋</h1>
+                            <p class="fs-4 opacity-75">Bem-vindo a casa.</p>
+
+                            <div class="d-inline-flex align-items-center bg-white text-primary rounded-pill px-3 py-2 mt-3 fw-bold shadow-sm">
+                                <?= Html::encode($meuCondominio->nome) ?>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <h5><i class="fas fa-map-marker-alt"></i> Morada:</h5>
-                            <p class="lead"><?= Html::encode($meuCondominio->morada) ?></p>
+
+                        <div class="col-md-4 text-end d-none d-md-block">
+                            <i class="fas fa-building opacity-25" style="font-size: 10rem; margin-right: -15px;"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+                <h4 class="mb-3 text-light border-bottom pb-2">Acesso Rápido</h4>
+                <div class="row g-4 mb-5">
+
+                    <div class="col-md-4">
+                        <a href="<?= Url::to(['/anuncio/index']) ?>" class="text-decoration-none">
+                            <div class="card h-100 text-bg-dark border-0 shadow hover-overlay">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-bullhorn fa-3x mb-3 opacity-50"></i>
+                                    <h4 class="card-title fw-bold">Comunicados</h4>
+                                    <p class="card-text opacity-75">Ver avisos e atas recentes.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-4">
+                        <a href="<?= Url::to(['/reserva/index']) ?>" class="text-decoration-none">
+                            <div class="card h-100 text-bg-success border-0 shadow">
+                                <div class="card-body text-center p-4">
+                                    <i class="fas fa-calendar-check fa-3x mb-3 opacity-50"></i>
+                                    <h4 class="card-title fw-bold">Reservas</h4>
+                                    <p class="card-text opacity-75">Agendar espaços comuns.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-4">
+                        <a href="<?= Url::to(['/mensagem/index']) ?>" class="text-decoration-none">
+                            <div class="card h-100 text-bg-warning border-0 shadow">
+                                <div class="card-body text-center p-4 text-white"> <i class="fas fa-envelope fa-3x mb-3 opacity-50"></i>
+                                    <h4 class="card-title fw-bold">Mensagens</h4>
+                                    <p class="card-text opacity-75">Contactar administração.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            <div class="card border-0 shadow rounded-4">
+                <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0 text-secondary">Os meus Dados</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0 text-center text-md-start border-end-md">
+                            <span class="text-uppercase text-muted small fw-bold">Fração</span>
+                            <div class="display-6 fw-bold text-primary"><?= Html::encode($minhaFracao->codigo ?? 'N/A') ?></div>
+                        </div>
+                        <div class="col-md-6 text-center text-md-start ps-md-4">
+                            <span class="text-uppercase text-muted small fw-bold">Morada</span>
+                            <div class="fs-5 text-dark"><?= Html::encode($meuCondominio->morada) ?></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+        <?php else: ?>
+
+            <div class="d-flex align-items-center justify-content-center" style="min-height: 60vh;">
+                <div class="card border-warning mb-3 shadow rounded-4" style="max-width: 600px;">
+                    <div class="card-body text-center p-5">
+                        <div class="mb-4 text-warning">
+                            <i class="fas fa-hourglass-half fa-4x"></i>
+                        </div>
+                        <h2 class="card-title fw-bold mb-3">Conta em Validação</h2>
+                        <p class="card-text lead text-muted">
+                            A sua conta foi criada, mas ainda não está associada a nenhuma fração deste condomínio.
+                        </p>
+                        <hr class="my-4">
+                        <p class="card-text">
+                            Aguarde que o <strong>Administrador</strong> associe o seu utilizador.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         <?php endif; ?>
+
+    </div>
+
 <?php endif; ?>
 

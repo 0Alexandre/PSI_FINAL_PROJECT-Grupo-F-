@@ -10,9 +10,9 @@ use yii\widgets\ListView;
 $this->title = 'Minhas Reservas';
 ?>
 
-<div class="container py-5" style="max-width: 900px;">
+<div class="container mt-3">
 
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-primary mb-0 text-light">
                 <i class="fas fa-calendar-alt me-2 text-light"></i> Minhas Reservas

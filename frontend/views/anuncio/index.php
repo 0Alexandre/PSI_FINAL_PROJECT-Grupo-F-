@@ -7,7 +7,7 @@ use yii\helpers\Html;
 $this->title = 'Quadro de Avisos';
 ?>
 
-<div class="container mt-5" style="max-width: 800px;">
+<div class="container mt-3">
 
     <div class="text-center mb-5">
         <h1 class="text-primary fw-bold text-light"><i class="fas fa-bullhorn text-light"></i> Quadro de Avisos</h1>

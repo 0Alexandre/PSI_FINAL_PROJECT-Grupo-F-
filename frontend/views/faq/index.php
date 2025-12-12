@@ -3,7 +3,7 @@ use yii\helpers\Html;
 $this->title = 'Perguntas Frequentes';
 ?>
 
-<div class="container mt-5">
+<div class="container mt-3">
     <h1 class="text-center mb-4 text-primary text-light"><i class="fas fa-question-circle text-light"></i> FAQ</h1>
 
     <?php if (empty($faqs)): ?>

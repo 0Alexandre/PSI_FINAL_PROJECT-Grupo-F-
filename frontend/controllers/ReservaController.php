@@ -7,6 +7,7 @@ use Yii;
 use common\models\Reserva;
 use common\models\EspacoComum;
 use yii\helpers\ArrayHelper;
+use common\models\Fracao;
 
 class ReservaController extends \yii\web\Controller
 {
@@ -66,15 +67,22 @@ class ReservaController extends \yii\web\Controller
         ]);
     }
 
+
     public function actionIndex()
     {
-        $user = Yii::$app->user->identity;
+        $query = Reserva::find();
+
+        $fracao = Yii::$app->user->identity->fracao;
+
+        if ($fracao) {
+            $query->joinWith('espaco')
+                ->andWhere(['espacos_comuns.condominio_id' => $fracao->condominio_id]);
+        } else {
+            $query->where('0=1');
+        }
 
         $dataProvider = new \yii\data\ActiveDataProvider([
-            'query' => \common\models\Reserva::find()
-                ->where(['utilizador_id' => $user->id])
-                ->orderBy(['inicio' => SORT_DESC]),
-            'pagination' => ['pageSize' => 6],
+            'query' => $query,
         ]);
 
         return $this->render('index', [
