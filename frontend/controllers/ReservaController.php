@@ -43,6 +43,10 @@ class ReservaController extends \yii\web\Controller
         $user = Yii::$app->user->identity;
         $meuCondominio = $user->getCondominio();
 
+        if (!$meuCondominio) {
+            return $this->redirect(['site/index']);
+        }
+
         $espacos = EspacoComum::find()
             ->where(['condominio_id' => $meuCondominio->id])
             ->all();
@@ -55,7 +59,6 @@ class ReservaController extends \yii\web\Controller
                 $model->estado = 'Pendente';
 
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Pedido de reserva enviado! Aguarde aprovação.');
                     return $this->redirect(['index']);
                 }
             }

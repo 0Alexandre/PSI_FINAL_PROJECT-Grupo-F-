@@ -29,7 +29,12 @@ class FaqController extends Controller
         $user = Yii::$app->user->identity;
 
         $condominio = $user->getCondominio();
-        $condominioId = $condominio ? $condominio->id : null;
+
+        if ($condominio) {
+            $condominioId = $condominio->id;
+        } else {
+            $condominioId = null;
+        }
 
         $faqs = Faq::find()
             ->where(['visivel_publico' => 1])

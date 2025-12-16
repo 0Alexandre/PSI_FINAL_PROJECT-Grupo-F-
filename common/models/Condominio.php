@@ -38,6 +38,10 @@ class Condominio extends \yii\db\ActiveRecord
         return [
             [['nome', 'morada', 'admin_id'], 'required'],
             [['admin_id'], 'integer'],
+
+            [['latitude', 'longitude'], 'number'],
+            [['latitude', 'longitude'], 'default', 'value' => null],
+
             [['nome'], 'string', 'max' => 120],
             [['morada'], 'string', 'max' => 200],
             [['admin_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['admin_id' => 'id']],
@@ -54,6 +58,8 @@ class Condominio extends \yii\db\ActiveRecord
             'nome' => 'Nome',
             'morada' => 'Morada',
             'admin_id' => 'Admin ID',
+            'latitude' => 'Latitude',
+            'longitude' => 'Longitude',
         ];
     }
 

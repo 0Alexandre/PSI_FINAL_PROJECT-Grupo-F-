@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper; // 1. Importar o ArrayHelper
-use common\models\User;      // 2. Importar o modelo User
+use yii\helpers\ArrayHelper;
+use common\models\User;
 
 /** @var yii\web\View $this */
 /** @var common\models\Condominio $model */
@@ -21,6 +21,10 @@ use common\models\User;      // 2. Importar o modelo User
             <?= $form->field($model, 'nome')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'morada')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'latitude')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'longitude')->textInput(['maxlength' => true]) ?>
 
             <?= $form->field($model, 'admin_id')->dropDownList(
                 $listaAdmins,

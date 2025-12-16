@@ -12,7 +12,7 @@ use yii\helpers\Url;
 $this->title = 'Nova Mensagem';
 ?>
 
-<div class="container py-5" style="max-width: 800px;">
+<div class="container mt-3">
 
     <div class="d-flex align-items-center mb-4">
         <a href="<?= Url::to(['index']) ?>" class="btn btn-outline-secondary me-3 rounded-circle shadow-sm" style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
