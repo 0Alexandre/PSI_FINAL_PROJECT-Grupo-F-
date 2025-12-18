@@ -3,10 +3,10 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Criar Conta';
-$this->registerCssFile(Yii::getAlias('@web') . '/css/signup.css'); // CSS externo
+$this->registerCssFile(Yii::getAlias('@web') . '/css/signup.css');
 ?>
 
-<div class="container signup-wrapper">
+<div class="container signup-wrapper mt-5">
 
     <div class="signup-box">
 

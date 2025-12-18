@@ -3,18 +3,15 @@
     --accent: #2f9e6e;
 }
 
-/* Fundo da página */
 body {
     background: radial-gradient(circle at center, #1b5e8c, #0a2e46);
-    /* O Bootstrap cuida do overflow, mas por garantia: */
     overflow-x: hidden;
 }
 
-/* A caixa de vidro */
 .login-box {
     width: 100%;
-    max-width: 400px; /* Largura máxima bonita */
-    background: rgba(255, 255, 255, 0.1); /* Mais transparente */
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);

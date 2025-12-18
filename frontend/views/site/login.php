@@ -8,7 +8,7 @@ $this->title = 'Login - DomusGestLink';
 $this->registerCssFile(Yii::getAlias('@web') . '/css/login.css');
 ?>
 
-<div class="container login-wrapper d-flex justify-content-center align-items-center">
+<div class="container login-wrapper d-flex justify-content-center align-items-center mt-5">
 
     <div class="login-box w-100" style="max-width: 400px;">
 
