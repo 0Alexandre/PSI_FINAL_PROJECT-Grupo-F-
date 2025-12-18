@@ -61,6 +61,9 @@ return [
                     'api/mensagem',
                     'api/espaco-comum',
             ],
+                    'extraPatterns' => [
+                        'GET info' => 'info',
+                    ],
             'pluralize' => false,
         ],
     ],

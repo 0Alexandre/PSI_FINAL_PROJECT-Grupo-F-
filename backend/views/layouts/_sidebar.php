@@ -9,9 +9,7 @@ function isItemActive($controllerId)
     return Yii::$app->controller->id === $controllerId ? 'active' : '';
 }
 
-// 2. Preparar Avatar (Inicial do Nome)
 $username = Yii::$app->user->identity->username;
-$inicial = strtoupper(substr($username, 0, 1));
 ?>
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -26,18 +24,14 @@ $inicial = strtoupper(substr($username, 0, 1));
 
     <div class="sidebar">
 
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex align-items-center">
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <div class="img-circle elevation-2 d-flex align-items-center justify-content-center bg-primary text-white"
-                     style="width: 34px; height: 34px; font-weight: bold; font-size: 18px;">
-                    <?= $inicial ?>
-                </div>
+                <i class="fas fa-user-circle fa-2x text-light"></i>
             </div>
             <div class="info">
                 <a href="#" class="d-block"><?= Html::encode($username) ?></a>
             </div>
         </div>
-
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
