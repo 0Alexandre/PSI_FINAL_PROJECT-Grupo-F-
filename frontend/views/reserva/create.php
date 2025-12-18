@@ -10,13 +10,13 @@ use yii\helpers\Url;
 $this->title = 'Nova Reserva';
 ?>
 
-<div class="container py-5" style="max-width: 600px;">
+<div class="container mt-3" style="max-width: 600px;">
 
     <div class="text-center mb-4">
-        <h2 class="fw-bold text-primary mb-2">
+        <h2 class="fw-bold text-light mb-2">
             <i class="fas fa-calendar-plus"></i> Fazer Reserva
         </h2>
-        <p class="text-muted">Escolha o espaço e o horário pretendido.</p>
+        <p class="text-light">Escolha o espaço e o horário pretendido.</p>
     </div>
 
     <div class="card shadow-sm border-0 rounded-4">
@@ -75,6 +75,12 @@ $this->title = 'Nova Reserva';
             <?php ActiveForm::end(); ?>
 
         </div>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="<?= Url::to(['espaco-comum/index']) ?>" class="btn btn-light rounded-pill px-4 py-2 shadow-lg">
+            <i class="fas fa-info-circle me-2"></i> Ver Detalhes dos Espaços
+        </a>
     </div>
 
     <div class="text-center mt-4 text-light small opacity-75">
