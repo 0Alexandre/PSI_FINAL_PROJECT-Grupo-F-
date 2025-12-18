@@ -13,7 +13,7 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/login.css');
     <div class="login-box w-100" style="max-width: 400px;">
 
         <div class="text-center mb-4">
-            <h1 class="login-title">Entrar</h1>
+            <h1 class="login-title text-light">Entrar</h1>
             <p class="login-desc text-light">Aceda à sua conta do DomusGestLink</p>
         </div>
 

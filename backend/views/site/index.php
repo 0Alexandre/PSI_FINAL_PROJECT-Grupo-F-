@@ -57,8 +57,6 @@ $this->params['breadcrumbs'] = [['label' => $this->title]];
                     </div>
                 </div>
             </div>
-
-            <!-- Podes adicionar mais caixas aqui para Proprietários e Sysadmins -->
         </div>
     <?php endif; ?>
 
