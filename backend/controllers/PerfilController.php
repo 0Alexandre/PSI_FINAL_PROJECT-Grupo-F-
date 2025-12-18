@@ -7,6 +7,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 /**
  * PerfilController implements the CRUD actions for Perfil model.
@@ -18,17 +19,24 @@ class PerfilController extends Controller
      */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return [
+
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['sysadmin'],
                     ],
                 ],
-            ]
-        );
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -75,6 +83,7 @@ class PerfilController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
+    /*
     public function actionCreate()
     {
         $model = new Perfil();
@@ -91,6 +100,7 @@ class PerfilController extends Controller
             'model' => $model,
         ]);
     }
+    */
 
     /**
      * Updates an existing Perfil model.
@@ -99,18 +109,20 @@ class PerfilController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+    /*
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = Perfil::findOne(['user_id' => $id]);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['/user/view', 'id' => $id]);
         }
 
         return $this->render('update', [
             'model' => $model,
         ]);
     }
+    */
 
     /**
      * Deletes an existing Perfil model.
@@ -119,12 +131,14 @@ class PerfilController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+    /*
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
+    */
 
     /**
      * Finds the Perfil model based on its primary key value.

@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use common\models\User;
-use common\models\Perfil; // <--- OBRIGATÓRIO: Importar o modelo Perfil
+use common\models\Perfil;
 use backend\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

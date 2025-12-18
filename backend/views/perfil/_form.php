@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap5\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var common\models\Perfil $model */
@@ -12,20 +12,33 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <div class="mb-3">
+        <label class="form-label">Utilizador Associado (ID)</label>
+        <?= Html::textInput('user_display', $model->user_id, [
+            'class' => 'form-control',
+            'disabled' => true
+        ]) ?>
+        <?= $form->field($model, 'user_id')->hiddenInput()->label(false) ?>
+    </div>
 
-    <?= $form->field($model, 'perfil')->textInput(['maxlength' => true]) ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'perfil')->textInput(['maxlength' => true])->label('Perfil') ?>
+    </div>
 
-    <?= $form->field($model, 'telefone')->textInput(['maxlength' => true]) ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'telefone')->textInput(['maxlength' => true]) ?>
+    </div>
 
-    <?= $form->field($model, 'foto_perfil')->textInput(['maxlength' => true]) ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'data_nascimento')->input('date') ?>
+    </div>
 
-    <?= $form->field($model, 'morada')->textInput(['maxlength' => true]) ?>
+    <div class="mb-3">
+        <?= $form->field($model, 'morada')->textarea(['rows' => 3]) ?>
+    </div>
 
-    <?= $form->field($model, 'data_nascimento')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <div class="form-group mt-4 text-end">
+        <?= Html::submitButton('<i class="fas fa-save"></i> Guardar', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

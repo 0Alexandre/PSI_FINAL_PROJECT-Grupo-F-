@@ -22,7 +22,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        // Adiciona classes para a tabela ficar bonita (AdminLTE style)
         'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'],
 
         'columns' => [

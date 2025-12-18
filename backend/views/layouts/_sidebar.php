@@ -52,6 +52,12 @@ $username = Yii::$app->user->identity->username;
                     </li>
 
                     <li class="nav-item">
+                        <a href="<?= Url::to(['/perfil/index']) ?>" class="nav-link <?= isItemActive('perfil') ?>">
+                            <i class="nav-icon fas fa-id-card"></i> <p>Perfis</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="<?= Url::to(['/condominio/index']) ?>" class="nav-link <?= isItemActive('condominio') ?>">
                             <i class="nav-icon fas fa-city"></i>
                             <p>Condomínios</p>
