@@ -39,8 +39,10 @@ $this->registerCssFile(Yii::getAlias('@web') . '/css/login.css');
 
         <div class="login-footer mt-4 text-center">
             <small>
+                <!--
                 Esqueceu a palavra-passe?
                 <?= Html::a('Recuperar', ['site/request-password-reset'], ['class' => 'text-decoration-none']) ?><br>
+                -->
 
                 Ainda não tem conta?
                 <?= Html::a('Criar Conta', ['site/signup'], ['class' => 'text-decoration-none fw-bold']) ?>

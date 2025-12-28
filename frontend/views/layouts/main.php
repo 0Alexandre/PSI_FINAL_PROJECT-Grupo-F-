@@ -86,6 +86,12 @@ AppAsset::register($this);
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
 
                                     <li>
+                                        <a class="dropdown-item" href="<?= Url::to(['site/change-password']) ?>">
+                                            <i class="fas fa-key me-2"></i> Alterar Password
+                                        </a>
+                                    </li>
+
+                                    <li>
                                         <a class="dropdown-item" href="<?= Url::to(['/perfil/index']) ?>">
                                             <i class="fas fa-id-card me-2"></i> O Meu Perfil
                                         </a>

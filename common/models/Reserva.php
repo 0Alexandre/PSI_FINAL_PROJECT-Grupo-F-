@@ -46,10 +46,40 @@ class Reserva extends \yii\db\ActiveRecord
             [['estado'], 'string'],
             [['inicio', 'fim'], 'safe'],
             ['estado', 'default', 'value' => 'Pendente'],
+
             ['fim', 'compare', 'compareAttribute' => 'inicio', 'operator' => '>', 'message' => 'A data de fim deve ser depois do início.'],
+
+            ['inicio', 'validarSobreposicao'],
+
             [['espaco_id'], 'exist', 'skipOnError' => true, 'targetClass' => EspacoComum::class, 'targetAttribute' => ['espaco_id' => 'id']],
             [['utilizador_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['utilizador_id' => 'id']],
         ];
+    }
+
+    /**
+     * Valida se já existe uma reserva no mesmo horário para o mesmo espaço.
+     */
+    public function validarSobreposicao($attribute, $params)
+    {
+        if ($this->hasErrors()) {
+            return;
+        }
+
+        // Procura conflitos na base de dados
+        $query = self::find()
+            ->where(['espaco_id' => $this->espaco_id])
+            ->andWhere(['<', 'inicio', $this->fim])
+            ->andWhere(['>', 'fim', $this->inicio]);
+
+        if (!$this->isNewRecord) {
+            $query->andWhere(['!=', 'id', $this->id]);
+        }
+
+        // Se encontrar algum registo, bloqueia
+        if ($query->exists()) {
+            $this->addError($attribute, 'Este horário já está ocupado por outra reserva.');
+            $this->addError('fim', 'Conflito de horário.');
+        }
     }
 
     /**
@@ -59,10 +89,10 @@ class Reserva extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'espaco_id' => 'Espaco ID',
-            'utilizador_id' => 'Utilizador ID',
-            'inicio' => 'Inicio',
-            'fim' => 'Fim',
+            'espaco_id' => 'Espaço',
+            'utilizador_id' => 'Utilizador',
+            'inicio' => 'Início da Reserva',
+            'fim' => 'Fim da Reserva',
             'estado' => 'Estado',
         ];
     }
@@ -87,7 +117,6 @@ class Reserva extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'utilizador_id']);
     }
 
-
     /**
      * column estado ENUM value labels
      * @return string[]
@@ -106,7 +135,8 @@ class Reserva extends \yii\db\ActiveRecord
      */
     public function displayEstado()
     {
-        return self::optsEstado()[$this->estado];
+        $estados = self::optsEstado();
+        return isset($estados[$this->estado]) ? $estados[$this->estado] : $this->estado;
     }
 
     /**

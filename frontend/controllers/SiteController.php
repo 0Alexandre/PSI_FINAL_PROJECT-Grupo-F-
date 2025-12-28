@@ -15,43 +15,46 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\models\ChangePasswordForm;
 
 /**
- * Site controller
+ * Site controller handles general frontend actions.
  */
 class SiteController extends Controller
 {
+    // Define as regras de acesso (quem pode ver o quê) e os métodos HTTP permitidos (ex: logout tem de ser POST)
     /**
      * {@inheritdoc}
      */
     public function behaviors()
-{
-    return [
-        'access' => [
-            'class' => AccessControl::class,
-            'only' => ['logout', 'signup'],
-            'rules' => [
-                [
-                    'actions' => ['signup'],
-                    'allow' => true,
-                    'roles' => ['?'],
-                ],
-                [
-                    'actions' => ['logout'],
-                    'allow' => true,
-                    'roles' => ['@'],
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout', 'signup'],
+                'rules' => [
+                    [
+                        'actions' => ['signup'],
+                        'allow' => true,
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
-        ],
-        'verbs' => [
-            'class' => VerbFilter::class,
-            'actions' => [
-                'logout' => ['post'],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'logout' => ['post'],
+                ],
             ],
-        ],
-    ];
-}
+        ];
+    }
 
+    // Define ações independentes, como o tratamento de erros e o sistema de CAPTCHA
     /**
      * {@inheritdoc}
      */
@@ -68,6 +71,7 @@ class SiteController extends Controller
         ];
     }
 
+    // Mostra a página inicial. Se o utilizador estiver logado, carrega os dados do seu condomínio e fração para mostrar no Dashboard
     /**
      * Displays homepage.
      *
@@ -83,13 +87,13 @@ class SiteController extends Controller
         $minhaFracao = $user->fracao;
         $meuCondominio = $user->condominio;
 
-
         return $this->render('index', [
             'minhaFracao' => $minhaFracao,
             'meuCondominio' => $meuCondominio,
         ]);
     }
 
+    // Faz o login. Inclui lógica de segurança para impedir que Administradores (Backend) façam login na área de Moradores (Frontend)
     /**
      * Logs in a user.
      *
@@ -110,6 +114,8 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 
+            // Segurança: Se for Sysadmin ou AdminCondominio, faz logout imediato e recarrega a página
+            // Isto impede admins de acederem ao frontend por engano
             if (Yii::$app->user->can('sysadmin') || Yii::$app->user->can('adminCondominio')) {
                 Yii::$app->user->logout();
                 return $this->refresh();
@@ -125,6 +131,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Faz o logout do utilizador atual
     /**
      * Logs out the current user.
      *
@@ -137,6 +144,7 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    // Exibe e processa o formulário de contacto
     /**
      * Displays contact page.
      *
@@ -160,6 +168,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Mostra a página "Sobre Nós"
     /**
      * Displays about page.
      *
@@ -170,6 +179,7 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
+    // Regista um novo utilizador no sistema
     /**
      * Signs user up.
      *
@@ -188,6 +198,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Inicia o processo de recuperação de password (envia email)
     /**
      * Requests password reset.
      *
@@ -211,6 +222,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Define a nova password usando o token recebido por email
     /**
      * Resets password.
      *
@@ -237,6 +249,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Verifica se o email é válido usando o token de registo
     /**
      * Verify email address
      *
@@ -260,6 +273,7 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
+    // Reenvia o email de verificação caso o utilizador o tenha perdido
     /**
      * Resend verification email
      *
@@ -278,6 +292,28 @@ class SiteController extends Controller
 
         return $this->render('resendVerificationEmail', [
             'model' => $model
+        ]);
+    }
+
+    // Permite aos utilizadores autenticados alterarem a sua password
+    /**
+     * Change Password
+     */
+    public function actionChangePassword()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new ChangePasswordForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword()) {
+            Yii::$app->session->setFlash('success', 'Password alterada com sucesso!');
+            return $this->goHome();
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
         ]);
     }
 }

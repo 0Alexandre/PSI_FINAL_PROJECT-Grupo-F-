@@ -10,12 +10,14 @@ use yii\filters\VerbFilter;
 use common\models\User;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use Yii;
 
 /**
  * CondominioController implements the CRUD actions for Condominio model.
  */
 class CondominioController extends Controller
 {
+    // Define permissões: 'sysadmin' faz tudo, 'adminCondominio' só pode ver (index/view)
     /**
      * @inheritDoc
      */
@@ -23,14 +25,15 @@ class CondominioController extends Controller
     {
         return [
             'access' => [
-                'class' => \yii\filters\AccessControl::class,
+                'class' => AccessControl::class,
                 'rules' => [
+                    // Admin Condominio só pode ver a lista e detalhes
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
                         'roles' => ['sysadmin', 'adminCondominio'],
                     ],
-
+                    // Apenas o Sysadmin pode Criar, Editar ou Apagar Condomínios
                     [
                         'allow' => true,
                         'actions' => ['create', 'update', 'delete'],
@@ -39,7 +42,7 @@ class CondominioController extends Controller
                 ],
             ],
             'verbs' => [
-                'class' => \yii\filters\VerbFilter::className(),
+                'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -47,6 +50,7 @@ class CondominioController extends Controller
         ];
     }
 
+    // Lista os condomínios. Se não for 'sysadmin', o utilizador só vê os que gere
     /**
      * Lists all Condominio models.
      *
@@ -54,18 +58,15 @@ class CondominioController extends Controller
      */
     public function actionIndex()
     {
+        $query = Condominio::find();
+
+        // Se for um admin de condomínio, filtro para mostrar apenas os dele
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where(['admin_id' => Yii::$app->user->id]);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Condominio::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-            */
+            'query' => $query,
         ]);
 
         return $this->render('index', [
@@ -73,6 +74,7 @@ class CondominioController extends Controller
         ]);
     }
 
+    // Mostra os detalhes de um condomínio
     /**
      * Displays a single Condominio model.
      * @param int $id ID
@@ -86,6 +88,7 @@ class CondominioController extends Controller
         ]);
     }
 
+    // Cria um novo condomínio e permite escolher qual o Admin responsável (Apenas Sysadmin)
     /**
      * Creates a new Condominio model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -95,10 +98,12 @@ class CondominioController extends Controller
     {
         $model = new Condominio();
 
+        // Busca todos os users que têm o perfil 'ADMIN_CONDOMINIO' para preencher o dropdown
         $admins = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
             ->all();
+
         $listaAdmins = ArrayHelper::map($admins, 'id', 'username');
 
         if ($this->request->isPost) {
@@ -115,14 +120,24 @@ class CondominioController extends Controller
         ]);
     }
 
+    // Edita um condomínio existente (Apenas Sysadmin)
+    /**
+     * Updates an existing Condominio model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id ID
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
 
+        // Carrega novamente a lista de admins para caso se queira trocar o gestor
         $admins = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'ADMIN_CONDOMINIO'])
             ->all();
+
         $listaAdmins = ArrayHelper::map($admins, 'id', 'username');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
@@ -135,6 +150,7 @@ class CondominioController extends Controller
         ]);
     }
 
+    // Apaga um condomínio (Apenas Sysadmin)
     /**
      * Deletes an existing Condominio model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -149,6 +165,7 @@ class CondominioController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura o modelo pelo ID e lança erro 404 se não existir
     /**
      * Finds the Condominio model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

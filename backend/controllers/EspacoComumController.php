@@ -17,19 +17,19 @@ use Yii;
  */
 class EspacoComumController extends Controller
 {
+    // Define as regras de acesso e verbos permitidos. Adicionado 'sysadmin' para garantir acesso total.
     /**
      * @inheritDoc
      */
     public function behaviors()
     {
         return [
-
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['adminCondominio'],
+                        'roles' => ['adminCondominio', 'sysadmin'], // Adicionado sysadmin
                     ],
                 ],
             ],
@@ -42,6 +42,7 @@ class EspacoComumController extends Controller
         ];
     }
 
+    // Lista os espaços comuns. Se não for Sysadmin, filtra apenas os pertencentes aos condomínios do utilizador.
     /**
      * Lists all EspacoComum models.
      *
@@ -56,13 +57,16 @@ class EspacoComumController extends Controller
                 ->where(['condominios.admin_id' => Yii::$app->user->id]);
         }
 
-        $dataProvider = new \yii\data\ActiveDataProvider(['query' => $query,]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
     }
 
+    // Mostra os detalhes de um espaço comum específico.
     /**
      * Displays a single EspacoComum model.
      * @param int $id ID
@@ -76,6 +80,7 @@ class EspacoComumController extends Controller
         ]);
     }
 
+    // Cria um novo espaço comum. O dropdown de condomínios é filtrado para mostrar apenas os permitidos.
     /**
      * Creates a new EspacoComum model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -85,6 +90,13 @@ class EspacoComumController extends Controller
     {
         $model = new EspacoComum();
 
+        // Lógica de filtro para o Dropdown
+        $query = Condominio::find();
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where(['admin_id' => Yii::$app->user->id]);
+        }
+        $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
@@ -93,15 +105,13 @@ class EspacoComumController extends Controller
             $model->loadDefaultValues();
         }
 
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
-
         return $this->render('create', [
             'model' => $model,
             'listaCondominios' => $listaCondominios,
         ]);
     }
 
+    // Edita um espaço comum existente, mantendo a restrição de segurança no dropdown.
     /**
      * Updates an existing EspacoComum model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -113,12 +123,16 @@ class EspacoComumController extends Controller
     {
         $model = $this->findModel($id);
 
+        // Repete a lógica de filtro para garantir segurança na edição
+        $query = Condominio::find();
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where(['admin_id' => Yii::$app->user->id]);
+        }
+        $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
-
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
 
         return $this->render('update', [
             'model' => $model,
@@ -126,6 +140,7 @@ class EspacoComumController extends Controller
         ]);
     }
 
+    // Apaga um espaço comum.
     /**
      * Deletes an existing EspacoComum model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -140,6 +155,7 @@ class EspacoComumController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura o modelo pelo ID.
     /**
      * Finds the EspacoComum model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -16,6 +16,7 @@ use Yii;
  */
 class UserController extends Controller
 {
+    // Define permissões: Apenas o 'sysadmin' tem acesso total à gestão de utilizadores
     /**
      * @inheritDoc
      */
@@ -40,6 +41,7 @@ class UserController extends Controller
         ];
     }
 
+    // Lista todos os utilizadores registados e permite pesquisar
     /**
      * Lists all User models.
      */
@@ -54,6 +56,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Mostra os detalhes completos de um utilizador e do seu perfil
     /**
      * Displays a single User model.
      */
@@ -64,6 +67,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Cria um novo utilizador e o respetivo perfil. Gera uma password provisória se não for definida e atribui a permissão (Role)
     /**
      * Creates a new User model AND a new Perfil model.
      */
@@ -72,19 +76,30 @@ class UserController extends Controller
         $model = new User();
         $perfil = new Perfil();
 
-        // Carregar dados do POST para AMBOS os modelos
         if ($model->load(Yii::$app->request->post()) && $perfil->load(Yii::$app->request->post())) {
 
-            $model->setPassword('12345678');
+            // Lógica de Password: Se vier vazia, gera uma aleatória de 8 caracteres
+            if (empty($model->password)) {
+                $randomPass = Yii::$app->security->generateRandomString(8);
+                $model->password = $randomPass;
+                $msgPassword = 'A Password Temporária é: <strong style="font-size:1.2em">' . $randomPass . '</strong> 
+                <br> ⚠️ (Copie agora e envie esta password ao utilizador por Email ou SMS!)';
+            } else {
+                $msgPassword = 'A Password foi definida manualmente.';
+            }
+
+            // Configurações do User (Hash da password e AuthKey)
+            $model->setPassword($model->password);
             $model->generateAuthKey();
             $model->status = User::STATUS_ACTIVE;
 
             if ($model->save()) {
 
+                // Associa o perfil ao ID do utilizador acabado de criar
                 $perfil->user_id = $model->id;
-
                 $perfil->save();
 
+                // Atribui a Role (Permissão) no RBAC
                 if (!empty($model->role)) {
                     $auth = Yii::$app->authManager;
                     $role = $auth->getRole($model->role);
@@ -93,7 +108,8 @@ class UserController extends Controller
                     }
                 }
 
-                Yii::$app->session->setFlash('success', 'Utilizador e Perfil criados! Password: <strong>12345678</strong>');
+                Yii::$app->session->setFlash('success', 'Utilizador e Perfil criados! <br>' . $msgPassword);
+
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         }
@@ -104,6 +120,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Atualiza os dados do utilizador e do perfil. Também atualiza as permissões (Role) se forem alteradas
     /**
      * Updates an existing User model AND Perfil model.
      */
@@ -111,6 +128,7 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
+        // Carrega o perfil existente ou cria um novo em memória se não existir
         $perfil = $model->perfil;
         if (!$perfil) {
             $perfil = new Perfil();
@@ -119,10 +137,12 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $perfil->load(Yii::$app->request->post())) {
 
-            // Gravar ambos
+            // Tenta gravar ambos os modelos
             $isValid = $model->save();
             $isValid = $perfil->save() && $isValid;
+
             if ($isValid) {
+                // Atualiza a Role no RBAC (Remove as antigas e mete a nova)
                 if (!empty($model->role)) {
                     $auth = Yii::$app->authManager;
                     $auth->revokeAll($model->id);
@@ -143,6 +163,7 @@ class UserController extends Controller
         ]);
     }
 
+    // Desativa um utilizador (Soft Delete) em vez de apagar da base de dados, por segurança
     /**
      * Deletes (Soft Delete) an existing User model.
      */
@@ -160,6 +181,7 @@ class UserController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura o utilizador pelo ID e lança erro 404 se não existir
     protected function findModel($id)
     {
         if (($model = User::findOne(['id' => $id])) !== null) {

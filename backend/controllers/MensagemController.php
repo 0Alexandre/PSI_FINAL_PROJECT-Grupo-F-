@@ -17,13 +17,13 @@ use yii\helpers\ArrayHelper;
  */
 class MensagemController extends Controller
 {
+    // Define permissões: Apenas 'sysadmin' e 'adminCondominio' podem aceder às mensagens
     /**
      * @inheritDoc
      */
     public function behaviors()
     {
         return [
-
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
@@ -42,6 +42,7 @@ class MensagemController extends Controller
         ];
     }
 
+    // Lista as mensagens. Se não for 'sysadmin', filtra para mostrar apenas as enviadas ou recebidas pelo utilizador
     /**
      * Lists all Mensagens models.
      *
@@ -59,13 +60,14 @@ class MensagemController extends Controller
             ]);
         }
 
-        $dataProvider = new \yii\data\ActiveDataProvider(['query' => $query,]);
+        $dataProvider = new ActiveDataProvider(['query' => $query,]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
     }
 
+    // Mostra o conteúdo de uma mensagem específica
     /**
      * Displays a single Mensagens model.
      * @param int $id ID
@@ -79,6 +81,7 @@ class MensagemController extends Controller
         ]);
     }
 
+    // Cria uma mensagem. Define o remetente automaticamente e filtra a lista de destinatários (Condóminos do Admin)
     /**
      * Creates a new Mensagens model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -98,6 +101,7 @@ class MensagemController extends Controller
             }
         }
 
+        // Lógica de Destinatários: AdminCondominio só vê os users das suas frações
         if (Yii::$app->user->can('sysadmin')) {
             $users = User::find()->where(['status' => 10])->all();
         } else {
@@ -117,6 +121,7 @@ class MensagemController extends Controller
         ]);
     }
 
+    // Edita uma mensagem. Mantém a mesma lógica de filtro de destinatários do Create
     /**
      * Updates an existing Mensagens model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -151,6 +156,7 @@ class MensagemController extends Controller
         ]);
     }
 
+    // Apaga uma mensagem da base de dados
     /**
      * Deletes an existing Mensagens model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -165,6 +171,7 @@ class MensagemController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura a mensagem pelo ID e lança erro 404 se não existir
     /**
      * Finds the Mensagens model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -18,13 +18,13 @@ use Yii;
  */
 class FracaoController extends Controller
 {
+    // Define que apenas utilizadores com a permissão 'adminCondominio' podem aceder a estas ações
     /**
      * @inheritDoc
      */
     public function behaviors()
     {
         return [
-
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
@@ -43,6 +43,7 @@ class FracaoController extends Controller
         ];
     }
 
+    // Lista as frações. Se não for 'sysadmin', mostra apenas as dos condomínios geridos pelo utilizador
     /**
      * Lists all Fracao models.
      *
@@ -54,16 +55,19 @@ class FracaoController extends Controller
 
         if (!Yii::$app->user->can('sysadmin')) {
             $query->joinWith('condominio')
-                ->andWhere(['condominios.admin_id' => Yii::$app->user->id]);
+                ->where(['condominios.admin_id' => Yii::$app->user->id]);
         }
 
-        $dataProvider = new ActiveDataProvider(['query' => $query]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query
+        ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
     }
 
+    // Mostra os detalhes de uma fração específica
     /**
      * Displays a single Fracao model.
      * @param int $id ID
@@ -77,6 +81,7 @@ class FracaoController extends Controller
         ]);
     }
 
+    // Cria uma nova fração. Filtra os condomínios no dropdown para segurança (só mostra os do admin)
     /**
      * Creates a new Fracao model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -94,9 +99,14 @@ class FracaoController extends Controller
             $model->loadDefaultValues();
         }
 
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+        // Lógica de Filtro dos Condomínios
+        $queryCondominios = Condominio::find();
+        if (!Yii::$app->user->can('sysadmin')) {
+            $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
+        }
+        $listaCondominios = ArrayHelper::map($queryCondominios->all(), 'id', 'nome');
 
+        // Lista de Proprietários (Filtra users com perfil PROPRIETARIO)
         $proprietarios = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'PROPRIETARIO'])
@@ -111,6 +121,7 @@ class FracaoController extends Controller
         ]);
     }
 
+    // Edita uma fração. Mantém o filtro de condomínios para impedir trocas para prédios alheios
     /**
      * Updates an existing Fracao model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -126,9 +137,14 @@ class FracaoController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+        // Lógica de Filtro dos Condomínios
+        $queryCondominios = Condominio::find();
+        if (!Yii::$app->user->can('sysadmin')) {
+            $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
+        }
+        $listaCondominios = ArrayHelper::map($queryCondominios->all(), 'id', 'nome');
 
+        // Lista de Proprietários
         $proprietarios = User::find()
             ->joinWith('perfil')
             ->where(['perfil.perfil' => 'PROPRIETARIO'])
@@ -143,6 +159,7 @@ class FracaoController extends Controller
         ]);
     }
 
+    // Apaga uma fração da base de dados
     /**
      * Deletes an existing Fracao model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -157,6 +174,7 @@ class FracaoController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura a fração pelo ID e lança erro 404 se não existir
     /**
      * Finds the Fracao model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

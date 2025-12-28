@@ -56,7 +56,7 @@ $this->title = 'Quadro de Avisos';
                     </div>
 
                     <div class="card-body pt-0 ps-5 ms-2">
-                        <div class="text-dark opacity-75" style="white-space: pre-wrap; line-height: 1.6;">
+                        <div class="text-dark opacity-75" style="line-height: 1.6;">
                             <?= Yii::$app->formatter->asNtext($anuncio->conteudo) ?>
                         </div>
                     </div>

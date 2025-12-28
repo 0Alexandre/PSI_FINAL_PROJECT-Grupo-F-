@@ -12,12 +12,14 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
+use common\models\ChangePasswordForm;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    // Define permissões de acesso: Apenas 'sysadmin' e 'adminCondominio' podem entrar no Dashboard
     /**
      * {@inheritdoc}
      */
@@ -26,6 +28,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
+                // Se o acesso for negado, faz logout e manda para a página de login
                 'denyCallback' => function () {
                     Yii::$app->user->logout();
                     return $this->redirect(['site/login']);
@@ -36,7 +39,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['index', 'logout'],
+                        'actions' => ['index', 'logout', 'change-password'],
                         'allow' => true,
                         'roles' => ['sysadmin', 'adminCondominio'],
                     ],
@@ -63,6 +66,7 @@ class SiteController extends Controller
         ];
     }
 
+    // Dashboard Principal: Calcula estatísticas e filtra os dados para que o Admin de Condomínio veja apenas o seu portfólio
     /**
      * Dashboard Principal.
      */
@@ -71,21 +75,21 @@ class SiteController extends Controller
         $userId = Yii::$app->user->id;
         $isSysAdmin = Yii::$app->user->can('sysadmin');
 
+        // Estatísticas globais (contadores simples)
         $totalUsers = User::find()->count();
         $admins = Perfil::find()->where(['perfil' => 'ADMIN_CONDOMINIO'])->count();
         $proprietarios = Perfil::find()->where(['perfil' => 'PROPRIETARIO'])->count();
         $sysadmins = Perfil::find()->where(['perfil' => 'SYS_ADMIN'])->count();
 
+        // Lógica de Condomínios: Se não for Sysadmin, filtra pelos condomínios do user
         $queryMeusCondominios = Condominio::find();
-
         if (!$isSysAdmin) {
             $queryMeusCondominios->where(['admin_id' => $userId]);
         }
-
         $meusCondominios = $queryMeusCondominios->all();
         $totalCondominios = count($meusCondominios);
 
-
+        // Lógica de Frações: Se não for Sysadmin, faz join para contar apenas frações dos condomínios dele
         $queryFracoes = Fracao::find();
         if (!$isSysAdmin) {
             $queryFracoes->joinWith('condominio')
@@ -100,6 +104,8 @@ class SiteController extends Controller
             'meusCondominios'
         ));
     }
+
+    // Gere o processo de autenticação (Login) e define o layout da página
     /**
      * Login action.
      */
@@ -123,6 +129,7 @@ class SiteController extends Controller
         ]);
     }
 
+    // Termina a sessão do utilizador (Logout) e redireciona para a home
     /**
      * Logout action.
      */
@@ -131,5 +138,25 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    // Permite ao utilizador alterar a sua própria palavra-passe por questões de segurança
+    public function actionChangePassword()
+    {
+        // Se não estiver logado, manda embora
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $model = new ChangePasswordForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->changePassword()) {
+            Yii::$app->session->setFlash('success', 'Password alterada com sucesso!');
+            return $this->goHome();
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
+        ]);
     }
 }

@@ -17,58 +17,37 @@ use Yii;
  */
 class AnuncioController extends Controller
 {
+    // Define as regras de acesso (quem pode ver a página) e os métodos HTTP permitidos
     /**
      * @inheritDoc
      */
     public function behaviors()
     {
         return [
-
-                'access' => [
-                    'class' => AccessControl::class,
-                    'rules' => [
-                        [
-                            'allow' => true,
-                            'roles' => ['adminCondominio'],
-                        ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['adminCondominio', 'sysadmin'],
                     ],
                 ],
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
-                    ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
                 ],
+            ],
         ];
     }
 
+    // Lista todos os anúncios, filtrando apenas os condomínios do utilizador se este não for Sysadmin
     /**
      * Lists all Anuncio models.
      *
      * @return string
      */
-    /*
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Anuncio::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'id' => SORT_DESC,
-                ]
-            ],
-        ]);
-
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-    */
-
     public function actionIndex()
     {
         $query = Anuncio::find();
@@ -87,6 +66,7 @@ class AnuncioController extends Controller
         ]);
     }
 
+    // Exibe os detalhes de um anúncio específico
     /**
      * Displays a single Anuncio model.
      * @param int $id ID
@@ -100,6 +80,7 @@ class AnuncioController extends Controller
         ]);
     }
 
+    // Cria um novo anúncio, preenchendo a data automaticamente e carregando a lista de condomínios permitidos
     /**
      * Creates a new Anuncio model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -108,7 +89,6 @@ class AnuncioController extends Controller
     public function actionCreate()
     {
         $model = new Anuncio();
-
         $query = Condominio::find();
 
         if (!Yii::$app->user->can('sysadmin')) {
@@ -119,6 +99,7 @@ class AnuncioController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->data = date('Y-m-d H:i:s');
+
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -132,6 +113,7 @@ class AnuncioController extends Controller
         ]);
     }
 
+    // Atualiza um anúncio existente, mantendo a restrição da lista de condomínios
     /**
      * Updates an existing Anuncio model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -147,8 +129,11 @@ class AnuncioController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
-        $condominios = Condominio::find()->all();
-        $listaCondominios = ArrayHelper::map($condominios, 'id', 'nome');
+        $query = Condominio::find();
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->where(['admin_id' => Yii::$app->user->id]);
+        }
+        $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
 
         return $this->render('update', [
             'model' => $model,
@@ -156,6 +141,7 @@ class AnuncioController extends Controller
         ]);
     }
 
+    // Apaga um anúncio da base de dados
     /**
      * Deletes an existing Anuncio model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -170,6 +156,7 @@ class AnuncioController extends Controller
         return $this->redirect(['index']);
     }
 
+    // Procura o modelo pelo ID, garantindo que o utilizador tem permissão para o ver
     /**
      * Finds the Anuncio model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -179,10 +166,18 @@ class AnuncioController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Anuncio::findOne(['id' => $id])) !== null) {
+        // Usa 'anuncio.id' para evitar ambiguidade no SQL
+        $query = Anuncio::find()->where(['anuncio.id' => $id]);
+
+        if (!Yii::$app->user->can('sysadmin')) {
+            $query->joinWith('condominio')
+                ->andWhere(['condominios.admin_id' => Yii::$app->user->id]);
+        }
+
+        if (($model = $query->one()) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('The requested page does not exist.');
+        throw new NotFoundHttpException('Página não encontrada ou sem permissão.');
     }
 }

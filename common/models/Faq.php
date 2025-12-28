@@ -34,7 +34,7 @@ class Faq extends \yii\db\ActiveRecord
     {
         return [
             [['visivel_publico'], 'default', 'value' => 1],
-            [['condominio_id', 'pergunta', 'resposta'], 'required'],
+            [['pergunta', 'resposta'], 'required'],
             [['condominio_id', 'visivel_publico'], 'integer'],
             [['pergunta', 'resposta'], 'string'],
             [['condominio_id'], 'exist', 'skipOnError' => true, 'targetClass' => Condominio::class, 'targetAttribute' => ['condominio_id' => 'id']],
@@ -62,7 +62,7 @@ class Faq extends \yii\db\ActiveRecord
      */
     public function getCondominio()
     {
-        return $this->hasOne(Condominios::class, ['id' => 'condominio_id']);
+        return $this->hasOne(Condominio::class, ['id' => 'condominio_id']);
     }
 
 }

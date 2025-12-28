@@ -110,11 +110,26 @@ $username = Yii::$app->user->identity->username;
                     </li>
 
                     <li class="nav-item">
+                        <a href="<?= Url::to(['/faq/index']) ?>" class="nav-link <?= isItemActive('faq') ?>">
+                            <i class="nav-icon fas fa-question-circle"></i>
+                            <p>FAQ</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="<?= Url::to(['/mensagem/index']) ?>" class="nav-link <?= isItemActive('mensagem') ?>">
                             <i class="nav-icon fas fa-envelope"></i> <p>Mensagens</p>
                         </a>
                     </li>
                 <?php endif; ?>
+
+                <li class="nav-header">MINHA CONTA</li>
+
+                <li class="nav-item">
+                    <a href="<?= Url::to(['/site/change-password']) ?>" class="nav-link">
+                        <i class="nav-icon fas fa-key"></i> <p>Alterar Password</p>
+                    </a>
+                </li>
 
             </ul>
         </nav>

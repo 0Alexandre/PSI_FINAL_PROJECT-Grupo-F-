@@ -28,8 +28,6 @@ $this->beginPage();
         <?= $this->render('_sidebar') ?>
 
         <div class="content-wrapper p-3">
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs'] ?? []]) ?>
-
             <?= Alert::widget() ?>
 
             <?= $content ?>

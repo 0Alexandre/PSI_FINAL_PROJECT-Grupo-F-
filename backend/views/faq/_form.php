@@ -12,9 +12,17 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?php
+    $opcoes = [];
+
+    if (Yii::$app->user->can('sysadmin')) {
+        $opcoes['prompt'] = 'Geral (Visível a todos os condomínios)';
+    }
+    ?>
+
     <?= $form->field($model, 'condominio_id')->dropDownList(
         $listaCondominios,
-        ['prompt' => 'Geral (Visível a todos os condomínios)']
+        $opcoes
     )->label('Condomínio Específico') ?>
 
     <?= $form->field($model, 'pergunta')->textarea(['rows' => 6]) ?>
