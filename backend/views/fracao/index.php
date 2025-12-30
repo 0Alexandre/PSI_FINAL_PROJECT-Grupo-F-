@@ -25,12 +25,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'condominio_id',
-            'proprietario_id',
+            [
+                'attribute' => 'condominio_id',
+                'label' => 'Condomínio',
+                'value' => function ($model) {
+                    return $model->condominio_id . ' - ' . $model->condominio->nome;
+                },
+            ],
+            [
+                'attribute' => 'proprietario_id',
+                'label' => 'Proprietario',
+                'value' => function ($model) {
+                    return $model->proprietario_id . ' - ' . $model->proprietario->username;
+                },
+            ],
             'codigo',
-
             ['class' => ActionColumn::class],
         ],
     ]); ?>

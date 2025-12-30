@@ -91,7 +91,6 @@ class FaqController extends Controller
     {
         $model = new Faq();
 
-        // --- LÓGICA DE SEGURANÇA DO DROPDOWN ---
         if (Yii::$app->user->can('sysadmin')) {
             // Sysadmin: Pode criar FAQ para qualquer condomínio
             $condominios = Condominio::find()->all();

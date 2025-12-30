@@ -136,7 +136,7 @@ $this->title = 'DomusGestLink - Dashboard';
                             <div class="card-body text-center p-4">
                                 <i class="fas fa-bullhorn fa-3x mb-3 opacity-50"></i>
                                 <h4 class="card-title fw-bold">Comunicados</h4>
-                                <p class="card-text opacity-75">Ver avisos e atas.</p>
+                                <p class="card-text opacity-75">Ver avisos e atas</p>
                             </div>
                         </div>
                     </a>
@@ -147,7 +147,7 @@ $this->title = 'DomusGestLink - Dashboard';
                             <div class="card-body text-center p-4">
                                 <i class="fas fa-calendar-check fa-3x mb-3 opacity-50"></i>
                                 <h4 class="card-title fw-bold">Reservas</h4>
-                                <p class="card-text opacity-75">Agendar espaços.</p>
+                                <p class="card-text opacity-75">Agendar espaços</p>
                             </div>
                         </div>
                     </a>
@@ -158,7 +158,7 @@ $this->title = 'DomusGestLink - Dashboard';
                             <div class="card-body text-center p-4 text-white">
                                 <i class="fas fa-envelope fa-3x mb-3 opacity-50"></i>
                                 <h4 class="card-title fw-bold">Mensagens</h4>
-                                <p class="card-text opacity-75">Fale com o admin.</p>
+                                <p class="card-text opacity-75">Fale com o administrador</p>
                             </div>
                         </div>
                     </a>

@@ -144,13 +144,21 @@ class ReservaController extends \yii\web\Controller
     {
         $model = $this->findModel($id);
 
-        // Segurança: Verifica se a reserva pertence a quem está logado
+        // 1. SEGURANÇA: Verificar se a reserva pertence ao utilizador logado
         if ($model->utilizador_id !== Yii::$app->user->id) {
-            throw new ForbiddenHttpException('Não tem permissão para cancelar esta reserva.');
+            throw new \yii\web\ForbiddenHttpException('Não tem permissão para cancelar esta reserva.');
         }
 
+        // 2. REGRA DE TEMPO (O que faltava):
+        // Se a data de início for menor que agora (time()), significa que já passou ou já começou.
+        if (strtotime($model->inicio) < time()) {
+            Yii::$app->session->setFlash('error', 'Não é possível cancelar uma reserva que já aconteceu.');
+            return $this->redirect(['index']);
+        }
+
+        // 3. Apagar
         $model->delete();
-        Yii::$app->session->setFlash('success', 'Reserva cancelada.');
+        Yii::$app->session->setFlash('success', 'Reserva cancelada com sucesso.');
 
         return $this->redirect(['index']);
     }

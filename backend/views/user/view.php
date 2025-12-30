@@ -32,13 +32,10 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email:email',
-
-            // CORREÇÃO AQUI:
             [
                 'label' => 'Tipo de Perfil',
-                'value' => $model->perfil->perfil ?? 'N/A', // Mostra o campo 'perfil' da tabela 'perfil'
+                'value' => $model->perfil->perfil,
             ],
-
             'status',
             'created_at',
             'updated_at',

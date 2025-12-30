@@ -30,7 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'condominio_id',
+            [
+                'label' => 'Condomínio',
+                'value' =>
+                    $model->condominio_id . ' - ' . $model->condominio->nome,
+            ],
             'nome',
             'descricao:ntext',
         ],

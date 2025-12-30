@@ -27,7 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'condominio_id',
+            [
+                'attribute' => 'condominio_id',
+                'label' => 'Condomínio',
+                'value' => function ($model) {
+                    return $model->condominio_id . ' - ' . $model->condominio->nome;
+                },
+            ],
             'nome',
             'descricao:ntext',
 

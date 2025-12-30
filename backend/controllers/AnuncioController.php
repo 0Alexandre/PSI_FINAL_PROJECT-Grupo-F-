@@ -166,18 +166,10 @@ class AnuncioController extends Controller
      */
     protected function findModel($id)
     {
-        // Usa 'anuncio.id' para evitar ambiguidade no SQL
-        $query = Anuncio::find()->where(['anuncio.id' => $id]);
-
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->joinWith('condominio')
-                ->andWhere(['condominios.admin_id' => Yii::$app->user->id]);
-        }
-
-        if (($model = $query->one()) !== null) {
+        if (($model = Anuncio::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
-        throw new NotFoundHttpException('Página não encontrada ou sem permissão.');
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

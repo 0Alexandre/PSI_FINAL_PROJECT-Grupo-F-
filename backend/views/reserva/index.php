@@ -2,12 +2,8 @@
 
 use common\models\Reserva;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use common\grid\ActionColumn;
 use yii\grid\GridView;
-
-/** @var yii\web\View $this */
-/** @var yii\data\ActiveDataProvider $dataProvider */
+use common\grid\ActionColumn;
 
 $this->title = 'Reservas';
 $this->params['breadcrumbs'][] = $this->title;
@@ -16,21 +12,34 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'espaco_id',
-            'utilizador_id',
+            [
+                'label' => 'Condomínio',
+                'value' => function ($model) {
+                    return $model->espaco->condominio->nome;
+                },
+            ],
+            [
+                'attribute' => 'espaco_id',
+                'value' => function ($model) {
+                    return $model->espaco_id . ' - ' . $model->espaco->nome;
+                },
+            ],
+            [
+                'attribute' => 'utilizador_id',
+                'value' => function ($model) {
+                    return $model->utilizador_id . ' - ' . $model->utilizador->username;
+                },
+            ],
             'inicio',
             'fim',
-
             ['class' => ActionColumn::class],
         ],
     ]); ?>
-
 
 </div>

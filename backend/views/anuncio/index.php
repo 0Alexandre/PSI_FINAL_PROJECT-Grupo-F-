@@ -25,13 +25,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-            'condominio_id',
+            [
+                'attribute' => 'condominio_id',
+                'label' => 'Condomínio',
+                'value' => function ($model) {
+                    return $model->condominio_id . ' - ' . $model->condominio->nome;
+                },
+            ],
             'titulo',
             'conteudo:ntext',
             'tipo',
-
+            [
+                'attribute' => 'visivel_publico',
+                'label' => 'Visível ao Público?',
+                'format' => 'boolean',
+            ],
             ['class' => ActionColumn::class],
         ],
     ]); ?>

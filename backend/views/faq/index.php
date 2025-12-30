@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Faq', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Criar Faq', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -27,10 +27,23 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'condominio_id',
+            [
+                'attribute' => 'condominio_id',
+                'label' => 'Condomínio',
+                'value' => function ($model) {
+                    if ($model->condominio) {
+                        return $model->condominio_id . ' - ' . $model->condominio->nome;
+                    }
+                    return 'Geral';
+                },
+            ],
             'pergunta:ntext',
             'resposta:ntext',
-            'visivel_publico',
+            [
+                'attribute' => 'visivel_publico',
+                'label' => 'Visível ao Público?',
+                'format' => 'boolean',
+            ],
 
             ['class' => ActionColumn::class],
         ],

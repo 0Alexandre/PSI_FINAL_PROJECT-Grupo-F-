@@ -21,23 +21,18 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= GridView::widget([
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
-            'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'], // CSS Nível 1
+            'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'],
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-
                 'id',
                 'username',
                 'email:email',
-
                 [
                     'attribute' => 'perfil_nome',
                     'value' => 'perfil.perfil',
                     'label' => 'Tipo de Perfil',
                 ],
-
                 ['class' => StatusColumn::class],
-
-                // Botões bonitos
                 ['class' => ActionColumn::class],
             ],
         ]); ?>

@@ -13,12 +13,17 @@ return [
     'bootstrap' => ['log'],
     'modules' => [
         'api' => [
+            // ADAPTAÇÃO: O nome da classe deve bater certo com o ficheiro da imagem (ModuleAPI.php)
             'class' => 'backend\modules\api\ModuleAPI',
         ],
     ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
+            // IMPORTANTE: Adicionado para ler o JSON enviado pelo Android
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ],
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -51,23 +56,48 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule',
-                    'controller' => ['api/user',
-                    'api/condominio',
-                    'api/fracao',
-                    'api/anuncio',
-                    'api/reserva',
-                    'api/reuniao',
-                    'api/mensagem',
-                    'api/espaco-comum',
-            ],
+                // --- REGRA 1: Login (AuthController) ---
+                // Nota: Cria o ficheiro AuthController.php se ainda não o fizeste
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/auth',
+                    'pluralize' => false,
                     'extraPatterns' => [
-                        'GET info' => 'info',
+                        'POST login' => 'login',
                     ],
-            'pluralize' => false,
+                ],
+
+                // --- REGRA 2: Reservas (com ação personalizada 'espacos') ---
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => 'api/reserva',
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'GET' => 'index',
+                        'POST' => 'create',
+                        'DELETE {id}' => 'delete',
+                        'GET espacos' => 'espacos', // Para o dropdown no Android
+                    ],
+                ],
+
+                // --- REGRA 3: Restante Controladores da Imagem ---
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => [
+                        'api/anuncio',
+                        'api/condominio',
+                        'api/default',      // Estava na imagem
+                        'api/espaco-comum', // O Yii converte EspacoComumController para espaco-comum
+                        'api/faq',
+                        'api/fracao',
+                        'api/mensagem',
+                        'api/perfil',       // Estava na imagem
+                        'api/user',
+                    ],
+                    'pluralize' => false,
+                ],
+            ],
         ],
-    ],
-],
     ],
 
     'layout' => 'main-adminlte',

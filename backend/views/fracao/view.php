@@ -30,8 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'condominio_id',
-            'proprietario_id',
+            [
+                'label' => 'Condomínio',
+                'value' => $model->condominio_id . ' - ' . $model->condominio->nome,
+            ],
+            [
+                'label' => 'Proprietário',
+                'value' => $model->proprietario_id . ' - ' . $model->proprietario->username,
+            ],
             'codigo',
         ],
     ]) ?>

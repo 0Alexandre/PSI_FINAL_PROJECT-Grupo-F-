@@ -14,6 +14,7 @@ AppAsset::register($this);
     <html lang="<?= Yii::$app->language ?>" class="h-100">
     <head>
         <meta charset="<?= Yii::$app->charset ?>">
+        <?= Html::csrfMetaTags() ?> <?php $this->head() ?>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= Html::encode($this->title) ?></title>
         <link rel="icon" href="<?= Yii::getAlias('@web') ?>/images/logo.png">

@@ -45,6 +45,7 @@ $this->title = 'Minhas Reservas';
 
             'itemView' => function ($model, $key, $index, $widget) {
 
+                // --- 1. Definição de Cores e Ícones ---
                 if ($model->estado == 'APROVADA') {
                     $statusClass = 'bg-success';
                     $statusIcon = 'fa-check-circle';
@@ -62,19 +63,39 @@ $this->title = 'Minhas Reservas';
                     $statusIcon = 'fa-question-circle';
                 }
 
+                // --- 2. Dados do Modelo ---
                 if ($model->espaco) {
-                    $nomeEspaco = $model->espaco->nome;
+                    $nomeEspaco = Html::encode($model->espaco->nome);
                 } else {
                     $nomeEspaco = 'Espaço Removido';
                 }
 
-                $inicio = Yii::$app->formatter->asDate($model->inicio, 'php:d M Y');
+                // Nota: Ajustei ligeiramente para mostrar Data E Hora, se preferires
+                $inicio = Yii::$app->formatter->asDate($model->inicio, 'php:d M Y H:i');
+                $fim = Yii::$app->formatter->asDate($model->fim, 'php:d M Y H:i');
 
-                $fim = Yii::$app->formatter->asTime($model->fim, 'php:d M Y');
+                // --- 3. Lógica do Botão Cancelar ---
+                $btnCancelar = '';
 
+                // Só mostra o botão se a reserva for no FUTURO
+                if (strtotime($model->inicio) > time()) {
+                    $btnCancelar = Html::a(
+                        '<i class="fas fa-trash-alt me-1"></i> Cancelar',
+                        ['delete', 'id' => $model->id],
+                        [
+                            'class' => 'btn btn-outline-danger btn-sm w-100 rounded-pill fw-bold',
+                            'data' => [
+                                'confirm' => 'Tem a certeza que pretende cancelar esta reserva?',
+                                'method' => 'post',
+                            ],
+                        ]
+                    );
+                }
+
+                // --- 4. Construção do HTML ---
                 return "
             <div class='card h-100 shadow-sm border-0 rounded-4 hover-shadow transition'>
-                <div class='card-body p-4'>
+                <div class='card-body p-4 d-flex flex-column'>
                     
                     <div class='d-flex justify-content-between align-items-start mb-3'>
                         <h5 class='fw-bold text-dark mb-0'>
@@ -86,7 +107,7 @@ $this->title = 'Minhas Reservas';
                         </span>
                     </div>
 
-                    <div class='vstack gap-2 border-start border-3 ps-3 border-light'>
+                    <div class='vstack gap-2 border-start border-3 ps-3 border-light mb-3'>
                         <div>
                             <small class='text-muted text-uppercase fw-bold' style='font-size: 0.7rem;'>Início</small>
                             <div class='text-dark'>{$inicio}</div>
@@ -95,6 +116,10 @@ $this->title = 'Minhas Reservas';
                             <small class='text-muted text-uppercase fw-bold' style='font-size: 0.7rem;'>Fim</small>
                             <div class='text-dark'>até {$fim}</div>
                         </div>
+                    </div>
+
+                    <div class='mt-auto'>
+                        {$btnCancelar}
                     </div>
 
                 </div>

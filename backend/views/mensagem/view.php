@@ -30,11 +30,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'remetente_id',
-            'destinatario_id',
+            [
+                'label' => 'Remetente',
+                'value' => $model->remetente_id . ' - ' . $model->remetente->username,
+            ],
+            [
+                'label' => 'Destinatário',
+                'value' => $model->destinatario_id . ' - ' . $model->destinatario->username,
+            ],
+
             'assunto',
             'corpo:ntext',
-            'data_envio',
+            'data_envio:datetime',
         ],
     ]) ?>
 

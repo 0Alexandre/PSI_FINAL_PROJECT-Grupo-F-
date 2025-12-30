@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\Faq $model */
 
-$this->title = $model->id;
+$this->title = 'FAQ #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Faqs', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Apagar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
+                'confirm' => 'Tem a certeza que pretende apagar este item?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -30,10 +30,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'condominio_id',
+            [
+                'label' => 'Condomínio',
+                'value' =>
+                    $model->condominio_id . ' - ' . $model->condominio->nome,
+            ],
             'pergunta:ntext',
             'resposta:ntext',
-            'visivel_publico',
+            [
+                'attribute' => 'visivel_publico',
+                'label' => 'Visível ao Público?',
+                'format' => 'boolean',
+            ],
         ],
     ]) ?>
 

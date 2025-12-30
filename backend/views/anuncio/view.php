@@ -30,12 +30,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'condominio_id',
+            [
+                'label' => 'Condomínio',
+                'value' =>
+                    $model->condominio_id . ' - ' . $model->condominio->nome,
+            ],
             'titulo',
             'conteudo:ntext',
             'tipo',
             'data',
-            'visivel_publico',
+            [
+                'attribute' => 'visivel_publico',
+                'label' => 'Visível ao Público?',
+                'format' => 'boolean',
+            ],
         ],
     ]) ?>
 
