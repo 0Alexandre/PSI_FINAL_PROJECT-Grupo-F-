@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use common\models\Mensagens;
+use common\models\Mensagem;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -13,7 +13,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 
 /**
- * MensagemController implements the CRUD actions for Mensagens model.
+ * MensagemController implements the CRUD actions for Mensagem model.
  */
 class MensagemController extends Controller
 {
@@ -44,21 +44,19 @@ class MensagemController extends Controller
 
     // Lista as mensagens. Se não for 'sysadmin', filtra para mostrar apenas as enviadas ou recebidas pelo utilizador
     /**
-     * Lists all Mensagens models.
+     * Lists all Mensagem models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $query = Mensagens::find();
+        $query = Mensagem::find();
 
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->where([
+        $query->where([
                 'OR',
                 ['destinatario_id' => Yii::$app->user->id],
                 ['remetente_id' => Yii::$app->user->id]
             ]);
-        }
 
         $dataProvider = new ActiveDataProvider(['query' => $query,]);
 
@@ -69,7 +67,7 @@ class MensagemController extends Controller
 
     // Mostra o conteúdo de uma mensagem específica
     /**
-     * Displays a single Mensagens model.
+     * Displays a single Mensagem model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -83,13 +81,13 @@ class MensagemController extends Controller
 
     // Cria uma mensagem. Define o remetente automaticamente e filtra a lista de destinatários (Condóminos do Admin)
     /**
-     * Creates a new Mensagens model.
+     * Creates a new Mensagem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Mensagens();
+        $model = new Mensagem();
 
         if ($this->request->isPost && $model->load($this->request->post())) {
             $model->remetente_id = Yii::$app->user->id;
@@ -123,7 +121,7 @@ class MensagemController extends Controller
 
     // Edita uma mensagem. Mantém a mesma lógica de filtro de destinatários do Create
     /**
-     * Updates an existing Mensagens model.
+     * Updates an existing Mensagem model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -158,7 +156,7 @@ class MensagemController extends Controller
 
     // Apaga uma mensagem da base de dados
     /**
-     * Deletes an existing Mensagens model.
+     * Deletes an existing Mensagem model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -173,15 +171,15 @@ class MensagemController extends Controller
 
     // Procura a mensagem pelo ID e lança erro 404 se não existir
     /**
-     * Finds the Mensagens model based on its primary key value.
+     * Finds the Mensagem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Mensagens the loaded model
+     * @return Mensagem the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Mensagens::findOne(['id' => $id])) !== null) {
+        if (($model = Mensagem::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

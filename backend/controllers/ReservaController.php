@@ -52,11 +52,9 @@ class ReservaController extends Controller
     {
         $query = Reserva::find();
 
-        if (!Yii::$app->user->can('sysadmin')) {
             // Faz o join com Espaco -> Condominio para filtrar pelo admin_id
-            $query->joinWith('espaco.condominio')
-                ->where(['condominios.admin_id' => Yii::$app->user->id]);
-        }
+        $query->joinWith('espaco.condominio')
+            ->where(['condominios.admin_id' => Yii::$app->user->id]);
 
         $dataProvider = new ActiveDataProvider(['query' => $query]);
 
@@ -101,10 +99,9 @@ class ReservaController extends Controller
         $queryEspacos = EspacoComum::find();
 
         // Se não for Sysadmin, filtra apenas os espaços dos condomínios dele
-        if (!Yii::$app->user->can('sysadmin')) {
-            $queryEspacos->joinWith('condominio')
-                ->where(['condominios.admin_id' => Yii::$app->user->id]);
-        }
+        $queryEspacos->joinWith('condominio')
+            ->where(['condominios.admin_id' => Yii::$app->user->id]);
+
 
         // Cria a lista para o dropdown (ex: "Salão de Festas - Prédio A")
         $listaEspacos = ArrayHelper::map($queryEspacos->all(), 'id', function($espaco) {
@@ -135,10 +132,9 @@ class ReservaController extends Controller
 
         // Lógica de filtro para o dropdown
         $queryEspacos = EspacoComum::find();
-        if (!Yii::$app->user->can('sysadmin')) {
-            $queryEspacos->joinWith('condominio')
-                ->where(['condominios.admin_id' => Yii::$app->user->id]);
-        }
+        $queryEspacos->joinWith('condominio')
+            ->where(['condominios.admin_id' => Yii::$app->user->id]);
+
 
         $listaEspacos = ArrayHelper::map($queryEspacos->all(), 'id', function($espaco) {
             return $espaco->nome . ' (' . $espaco->condominio->nome . ')';

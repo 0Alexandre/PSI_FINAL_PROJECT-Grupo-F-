@@ -65,6 +65,13 @@ $username = Yii::$app->user->identity->username;
                     </li>
 
                     <li class="nav-item">
+                        <a href="<?= Url::to(['/anuncio/index']) ?>" class="nav-link <?= isItemActive('anuncio') ?>">
+                            <i class="nav-icon fas fa-bullhorn"></i>
+                            <p>Anúncios</p>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a href="<?= Url::to(['/faq/index']) ?>" class="nav-link <?= isItemActive('faq') ?>">
                             <i class="nav-icon fas fa-question-circle"></i>
                             <p>FAQ</p>

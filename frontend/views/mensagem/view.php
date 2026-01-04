@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var common\models\Mensagens $model */
+/** @var common\models\Mensagem $model */
 /** @var string $remetenteNome */
 
 $this->title = $model->assunto;

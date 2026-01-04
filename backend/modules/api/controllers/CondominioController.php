@@ -19,17 +19,14 @@ class CondominioController extends Controller
 
     public function actionIndex()
     {
-        // 1. Identificar quem está a fazer o pedido
         $user = Yii::$app->user->identity;
 
-        // 2. Buscar o condomínio deste utilizador
-        $condominio = $user->getCondominio();
+        $condominio = $user->condominio;
 
         if (!$condominio) {
-            return ['message' => 'Utilizador sem condomínio associado.'];
+            return [];
         }
 
-        // 3. RETORNAR os dados para o Android (JSON)
         return $condominio;
     }
 }

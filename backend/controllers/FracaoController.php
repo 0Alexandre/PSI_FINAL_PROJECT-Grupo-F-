@@ -53,10 +53,8 @@ class FracaoController extends Controller
     {
         $query = Fracao::find();
 
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->joinWith('condominio')
+        $query->joinWith('condominio')
                 ->where(['condominios.admin_id' => Yii::$app->user->id]);
-        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query
@@ -101,9 +99,8 @@ class FracaoController extends Controller
 
         // Lógica de Filtro dos Condomínios
         $queryCondominios = Condominio::find();
-        if (!Yii::$app->user->can('sysadmin')) {
-            $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
-        }
+        $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
+
         $listaCondominios = ArrayHelper::map($queryCondominios->all(), 'id', 'nome');
 
         // Lista de Proprietários (Filtra users com perfil PROPRIETARIO)
@@ -139,9 +136,8 @@ class FracaoController extends Controller
 
         // Lógica de Filtro dos Condomínios
         $queryCondominios = Condominio::find();
-        if (!Yii::$app->user->can('sysadmin')) {
-            $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
-        }
+        $queryCondominios->where(['admin_id' => Yii::$app->user->id]);
+
         $listaCondominios = ArrayHelper::map($queryCondominios->all(), 'id', 'nome');
 
         // Lista de Proprietários

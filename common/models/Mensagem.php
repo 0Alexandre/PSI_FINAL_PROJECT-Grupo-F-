@@ -17,7 +17,7 @@ use Yii;
  * @property User $destinatario
  * @property User $remetente
  */
-class Mensagens extends \yii\db\ActiveRecord
+class Mensagem extends \yii\db\ActiveRecord
 {
 
 

@@ -65,7 +65,6 @@ class Reserva extends \yii\db\ActiveRecord
             return;
         }
 
-        // Procura conflitos na base de dados
         $query = self::find()
             ->where(['espaco_id' => $this->espaco_id])
             ->andWhere(['<', 'inicio', $this->fim])

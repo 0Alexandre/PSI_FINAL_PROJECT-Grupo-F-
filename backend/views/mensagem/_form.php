@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var common\models\Mensagens $model */
+/** @var common\models\Mensagem $model */
 /** @var yii\widgets\ActiveForm $form */
 /** @var array $listaDestinatarios */
 ?>

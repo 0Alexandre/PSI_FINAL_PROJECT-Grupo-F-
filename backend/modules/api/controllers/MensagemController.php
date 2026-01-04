@@ -2,9 +2,87 @@
 
 namespace backend\modules\api\controllers;
 
-use yii\rest\ActiveController;
+use yii\rest\Controller;
+use yii\filters\auth\QueryParamAuth;
+use common\models\Mensagem;
+use common\models\User;
+use Yii;
 
-class MensagemController extends ActiveController
+class MensagemController extends Controller
 {
-    public $modelClass = 'common\models\Mensagens';
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => QueryParamAuth::className(),
+        ];
+        return $behaviors;
+    }
+
+    public function actionIndex() {
+        $user = Yii::$app->user->identity;
+
+        return Mensagem::find()
+            ->where(['remetente_id' => $user->id])
+            ->orderBy(['id' => SORT_DESC])
+            ->all();
+    }
+
+    public function actionCreate()
+    {
+        $user = Yii::$app->user->identity;
+
+        $model = new Mensagem();
+        $model->load(Yii::$app->request->post(), '');
+
+        $model->remetente_id = $user->id;
+        $model->data_envio = date('Y-m-d H:i:s');
+
+        $SysAdmin = 5;
+
+        $AdminCondominio = null;
+
+        if (isset($user->fracao) && isset($user->fracao->condominio)) {
+            $AdminCondominio = $user->fracao->condominio->id_administrador;
+        }
+
+        if ($model->destinatario_id != $SysAdmin && $model->destinatario_id != $AdminCondominio) {
+            $model->addError('destinatario_id', 'Erro: Só podes enviar mensagem ao Administrador ou ao SysAdmin.');
+            return $model;
+        }
+
+        if ($model->save()) {
+            return $model;
+        }
+
+        return $model;
+    }
+
+    public function actionDestinatarios()
+    {
+        $user = Yii::$app->user->identity;
+        $lista = [];
+
+        $lista[] = [
+            'id' => 5,
+            'nome' => 'Apoio Técnico (SysAdmin)'
+        ];
+
+        if (isset($user->fracao) && isset($user->fracao->condominio)) {
+            $adminId = $user->fracao->condominio->admin_id;
+
+            if ($adminId && $adminId != 5) {
+                $adminUser = User::findOne($adminId);
+
+                if ($adminUser) {
+                    $lista[] = [
+                        'id' => $adminUser->id,
+                        'nome' => $adminUser->username
+                    ];
+                }
+            }
+        }
+
+        return $lista;
+    }
 }

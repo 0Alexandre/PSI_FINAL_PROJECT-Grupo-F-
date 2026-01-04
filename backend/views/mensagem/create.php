@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Mensagens $model */
+/** @var common\models\Mensagem $model */
 
-$this->title = 'Create Mensagens';
-$this->params['breadcrumbs'][] = ['label' => 'Mensagens', 'url' => ['index']];
+$this->title = 'Create Mensagem';
+$this->params['breadcrumbs'][] = ['label' => 'Mensagem', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="mensagens-create">

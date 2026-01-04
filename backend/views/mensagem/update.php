@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var common\models\Mensagens $model */
+/** @var common\models\Mensagem $model */
 
 $this->title = 'Atualizar Mensagem ' . $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Mensagens', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Mensagem', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>

@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use common\models\Mensagens;
+use common\models\Mensagem;
 use common\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -43,7 +43,7 @@ class MensagemController extends \yii\web\Controller
      */
     public function actionCreate()
     {
-        $model = new Mensagens();
+        $model = new Mensagem();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
@@ -67,6 +67,7 @@ class MensagemController extends \yii\web\Controller
         if ($meuCondominio) {
             $destinatarios = User::find()
                 ->where(['id' => $meuCondominio->admin_id])
+                ->orWhere(['id' => 5])
                 ->all();
         }
 
@@ -88,7 +89,7 @@ class MensagemController extends \yii\web\Controller
 
         // Provider para mensagens onde eu sou o destinatário
         $recebidasProvider = new ActiveDataProvider([
-            'query' => Mensagens::find()
+            'query' => Mensagem::find()
                 ->where(['destinatario_id' => $userId])
                 ->orderBy(['data_envio' => SORT_DESC]),
             'pagination' => [
@@ -98,7 +99,7 @@ class MensagemController extends \yii\web\Controller
 
         // Provider para mensagens onde eu sou o remetente
         $enviadasProvider = new ActiveDataProvider([
-            'query' => Mensagens::find()
+            'query' => Mensagem::find()
                 ->where(['remetente_id' => $userId])
                 ->orderBy(['data_envio' => SORT_DESC]),
             'pagination' => [
@@ -114,7 +115,7 @@ class MensagemController extends \yii\web\Controller
 
     // Mostra o conteúdo de uma mensagem. Inclui verificação de segurança para impedir leitura de mensagens alheias.
     /**
-     * Displays a single Mensagens model.
+     * Displays a single Mensagem model.
      * Contains security check to ensure only the sender or recipient can view it.
      * @param int $id ID
      * @return string
@@ -146,15 +147,15 @@ class MensagemController extends \yii\web\Controller
 
     // Procura a mensagem pelo ID
     /**
-     * Finds the Mensagens model based on its primary key value.
+     * Finds the Mensagem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Mensagens the loaded model
+     * @return Mensagem the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Mensagens::findOne(['id' => $id])) !== null) {
+        if (($model = Mensagem::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

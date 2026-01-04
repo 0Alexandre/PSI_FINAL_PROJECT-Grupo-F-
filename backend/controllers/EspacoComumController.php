@@ -52,10 +52,9 @@ class EspacoComumController extends Controller
     {
         $query = EspacoComum::find();
 
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->joinWith('condominio')
-                ->where(['condominios.admin_id' => Yii::$app->user->id]);
-        }
+        $query->joinWith('condominio')
+            ->where(['condominios.admin_id' => Yii::$app->user->id]);
+
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -92,9 +91,8 @@ class EspacoComumController extends Controller
 
         // Lógica de filtro para o Dropdown
         $query = Condominio::find();
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->where(['admin_id' => Yii::$app->user->id]);
-        }
+        $query->where(['admin_id' => Yii::$app->user->id]);
+
         $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
 
         if ($this->request->isPost) {
@@ -125,9 +123,8 @@ class EspacoComumController extends Controller
 
         // Repete a lógica de filtro para garantir segurança na edição
         $query = Condominio::find();
-        if (!Yii::$app->user->can('sysadmin')) {
-            $query->where(['admin_id' => Yii::$app->user->id]);
-        }
+        $query->where(['admin_id' => Yii::$app->user->id]);
+
         $listaCondominios = ArrayHelper::map($query->all(), 'id', 'nome');
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {

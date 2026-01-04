@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var common\models\Mensagens $model */
+/** @var common\models\Mensagem $model */
 /** @var common\models\User[] $destinatarios */
 
 $this->title = 'Nova Mensagem';

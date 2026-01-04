@@ -8,7 +8,7 @@ use yii\widgets\ListView;
 /** @var yii\data\ActiveDataProvider $recebidasProvider */
 /** @var yii\data\ActiveDataProvider $enviadasProvider */
 
-$this->title = 'Minhas Mensagens';
+$this->title = 'Minhas Mensagem';
 ?>
 
 <div class="container mt-3">
