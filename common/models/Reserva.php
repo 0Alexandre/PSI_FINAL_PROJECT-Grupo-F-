@@ -3,6 +3,8 @@
 namespace common\models;
 
 use Yii;
+use common\mosquitto\phpMQTT;
+
 
 /**
  * This is the model class for table "reservas".
@@ -74,7 +76,6 @@ class Reserva extends \yii\db\ActiveRecord
             $query->andWhere(['!=', 'id', $this->id]);
         }
 
-        // Se encontrar algum registo, bloqueia
         if ($query->exists()) {
             $this->addError($attribute, 'Este horário já está ocupado por outra reserva.');
             $this->addError('fim', 'Conflito de horário.');
@@ -175,5 +176,53 @@ class Reserva extends \yii\db\ActiveRecord
     public function setEstadoToRejeitada()
     {
         $this->estado = self::ESTADO_REJEITADA;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->utilizador_id = $this->utilizador_id;
+        $myObj->espaco_id = $this->espaco_id;
+        $myObj->data_inicio = $this->inicio;
+        $myObj->estado = $this->estado;
+        $myObj->tipo_model = 'RESERVA';
+
+        $myJSON = json_encode($myObj);
+
+        if ($insert) {
+            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+        } else {
+            $this->FazPublishNoMosquitto("UPDATE", $myJSON);
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->utilizador_id = $this->utilizador_id;
+        $myObj->tipo_model = 'RESERVA';
+
+        $myJSON = json_encode($myObj);
+        $this->FazPublishNoMosquitto("DELETE", $myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $client_id = "phpMQTT-publisher-reserva";
+
+        $mqtt = new phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, "", "")) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
     }
 }

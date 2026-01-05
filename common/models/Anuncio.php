@@ -3,7 +3,7 @@
 namespace common\models;
 
 use Yii;
-
+use common\mosquitto\phpMQTT;
 /**
  * This is the model class for table "anuncios".
  *
@@ -139,5 +139,45 @@ class Anuncio extends \yii\db\ActiveRecord
     public function setTipoToManutencao()
     {
         $this->tipo = self::TIPO_MANUTENCAO;
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->titulo = $this->titulo;
+        $myObj->conteudo = $this->conteudo;
+        $myObj->data = $this->data;
+        $myObj->tipo_model = 'ANUNCIO';
+        $myJSON = json_encode($myObj);
+
+        if ($insert) {
+            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+        } else {
+            $this->FazPublishNoMosquitto("UPDATE", $myJSON);
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        $myJSON = json_encode(['id' => $this->id]);
+        $this->FazPublishNoMosquitto("DELETE", $myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $client_id = "phpMQTT-publisher-anuncio";
+
+        $mqtt = new phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, "", "")) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
     }
 }

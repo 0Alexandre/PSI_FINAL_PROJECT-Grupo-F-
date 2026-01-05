@@ -3,7 +3,7 @@
 namespace common\models;
 
 use Yii;
-
+use common\mosquitto\phpMQTT;
 /**
  * This is the model class for table "mensagens".
  *
@@ -81,4 +81,37 @@ class Mensagem extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'remetente_id']);
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert) {
+            $myObj = new \stdClass();
+            $myObj->id = $this->id;
+            $myObj->remetente_id = $this->remetente_id;
+            $myObj->destinatario_id = $this->destinatario_id;
+            $myObj->assunto = $this->assunto;
+            $myObj->corpo = $this->corpo;
+            $myObj->data_envio = $this->data_envio;
+            $myObj->tipo_model = 'MENSAGEM';
+
+            $myJSON = json_encode($myObj);
+
+            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+        }
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $client_id = "phpMQTT-publisher-mensagem";
+
+        $mqtt = new phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, "", "")) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
+    }
 }

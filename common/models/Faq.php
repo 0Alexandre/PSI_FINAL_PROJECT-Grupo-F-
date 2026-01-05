@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use common\mosquitto\phpMQTT;
 
 /**
  * This is the model class for table "faq".
@@ -17,8 +18,6 @@ use Yii;
  */
 class Faq extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -65,4 +64,49 @@ class Faq extends \yii\db\ActiveRecord
         return $this->hasOne(Condominio::class, ['id' => 'condominio_id']);
     }
 
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->condominio_id = $this->condominio_id;
+        $myObj->pergunta = $this->pergunta;
+        $myObj->resposta = $this->resposta;
+        $myObj->tipo_model = 'FAQ';
+
+        $myJSON = json_encode($myObj);
+
+        if ($insert) {
+            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+        } else {
+            $this->FazPublishNoMosquitto("UPDATE", $myJSON);
+        }
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        $myObj = new \stdClass();
+        $myObj->id = $this->id;
+        $myObj->tipo_model = 'FAQ';
+        $myJSON = json_encode($myObj);
+
+        $this->FazPublishNoMosquitto("DELETE", $myJSON);
+    }
+
+    public function FazPublishNoMosquitto($canal, $msg)
+    {
+        $server = "127.0.0.1";
+        $port = 1883;
+        $client_id = "phpMQTT-publisher-faq";
+
+        $mqtt = new phpMQTT($server, $port, $client_id);
+
+        if ($mqtt->connect(true, NULL, "", "")) {
+            $mqtt->publish($canal, $msg, 0);
+            $mqtt->close();
+        }
+    }
 }

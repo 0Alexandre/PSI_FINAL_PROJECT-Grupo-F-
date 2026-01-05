@@ -32,8 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             [
                 'label' => 'Condomínio',
-                'value' =>
-                    $model->condominio_id . ' - ' . $model->condominio->nome,
+                'value' => function ($model) {
+                    if ($model->condominio !== null) {
+                        return $model->condominio_id . ' - ' . $model->condominio->nome;
+                    } else {
+                        return 'Geral';
+                    }
+                },
             ],
             'pergunta:ntext',
             'resposta:ntext',
