@@ -22,21 +22,18 @@ class AnuncioController extends Controller
     }
 
     /**
-     * MASTER (Lista para Android) - Requisito 1.2
+     * MASTER (Lista para Android)
      * Objetivo: Lista leve de anúncios para o RecyclerView.
      */
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        // Selecionamos apenas campos básicos para otimizar a resposta (Master)
         $query = Anuncio::find()->select(['id', 'titulo', 'data', 'condominio_id'])->orderBy(['data' => SORT_DESC]);
 
-        // 1. SysAdmin: Vê todos os anúncios
         if (Yii::$app->user->can('sysadmin')) {
             return $query->all();
         }
 
-        // 2. Definir condomínios autorizados (Onde é gestor + Onde vive)
         $meusCondominios = Condominio::find()
             ->select('id')
             ->where(['admin_id' => $user->id])
@@ -46,12 +43,11 @@ class AnuncioController extends Controller
             $meusCondominios[] = $user->fracao->condominio_id;
         }
 
-        // 3. Retorna lista filtrada
         return $query->where(['condominio_id' => $meusCondominios])->all();
     }
 
     /**
-     * DETAIL (Detalhe para Android) - Requisito 1.2
+     * DETAIL (Detalhe para Android) - 
      * Objetivo: Retorna o anúncio completo (incluindo o 'conteudo').
      */
     public function actionView($id)
@@ -63,34 +59,31 @@ class AnuncioController extends Controller
             throw new NotFoundHttpException("Anúncio não encontrado.");
         }
 
-        // Verificação de permissão (SysAdmin, Gestor do prédio ou Morador)
         $isGestor = Condominio::findOne(['id' => $model->condominio_id, 'admin_id' => $user->id]);
         $isMorador = (isset($user->fracao) && $user->fracao->condominio_id == $model->condominio_id);
 
         if (Yii::$app->user->can('sysadmin') || $isGestor || $isMorador) {
-            return $model; // Retorna o Detail (com conteúdo completo)
+            return $model; 
         }
 
         throw new ForbiddenHttpException("Não tens permissão para ver este anúncio.");
     }
 
     /**
-     * CREATE (Apenas Gestão / Postman) - Requisito 1.1
+     * CREATE (Apenas Gestão / Postman)
      */
     public function actionCreate()
     {
         $user = Yii::$app->user->identity;
         $model = new Anuncio();
         $model->load(Yii::$app->request->post(), '');
-        $model->data = date('Y-m-d H:i:s'); // Data gerada no servidor
+        $model->data = date('Y-m-d H:i:s'); 
 
-        // Se for Gestor e não enviar ID, assume o condomínio que ele administra
         if (!Yii::$app->user->can('sysadmin') && empty($model->condominio_id)) {
             $condo = Condominio::findOne(['admin_id' => $user->id]);
             if ($condo) $model->condominio_id = $condo->id;
         }
 
-        // Validação de segurança para gravação
         $podeGravar = Yii::$app->user->can('sysadmin') ||
             Condominio::findOne(['id' => $model->condominio_id, 'admin_id' => $user->id]);
 
@@ -102,7 +95,7 @@ class AnuncioController extends Controller
     }
 
     /**
-     * UPDATE (Apenas Gestão / Postman) - Requisito 1.1
+     * UPDATE (Apenas Gestão / Postman)
      */
     public function actionUpdate($id)
     {
@@ -123,7 +116,7 @@ class AnuncioController extends Controller
     }
 
     /**
-     * DELETE (Apenas Gestão / Postman) - Requisito 1.1
+     * DELETE (Apenas Gestão / Postman)
      */
     public function actionDelete($id)
     {
