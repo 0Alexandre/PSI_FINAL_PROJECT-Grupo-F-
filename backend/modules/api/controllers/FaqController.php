@@ -29,12 +29,10 @@ class FaqController extends Controller
     {
         $user = Yii::$app->user->identity;
 
-        // 1. SysAdmin: Vê todas as FAQs
         if (Yii::$app->user->can('sysadmin')) {
-            return Faq::find()->select(['id', 'condominio_id', 'pergunta'])->all();
+            return Faq::find()->select(['id', 'condominio_id', 'pergunta', 'resposta'])->all();
         }
 
-        // 2. Definir condomínios permitidos (Onde administra + Onde mora)
         $meusCondominios = Condominio::find()
             ->select('id')
             ->where(['admin_id' => $user->id])
@@ -44,10 +42,12 @@ class FaqController extends Controller
             $meusCondominios[] = $user->fracao->condominio_id;
         }
 
-        // 3. Retorna Master (Sumário) filtrado por condomínio
         return Faq::find()
-            ->select(['id', 'condominio_id', 'pergunta'])
-            ->where(['condominio_id' => $meusCondominios])
+            ->select(['id', 'condominio_id', 'pergunta', 'resposta'])
+            ->where(['or',
+                ['condominio_id' => $meusCondominios],
+                ['condominio_id' => null]
+            ])
             ->all();
     }
 
