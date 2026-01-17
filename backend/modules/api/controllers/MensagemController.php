@@ -51,7 +51,7 @@ class MensagemController extends Controller
         $AdminCondominio = null;
 
         if (isset($user->fracao) && isset($user->fracao->condominio)) {
-            $AdminCondominio = $user->fracao->condominio->id_administrador;
+            $AdminCondominio = $user->fracao->condominio->admin_id;
         }
 
         if ($model->destinatario_id != $SysAdmin && $model->destinatario_id != $AdminCondominio) {
