@@ -18,6 +18,11 @@ class PerfilController extends Controller
         return $behaviors;
     }
 
+
+    /**
+     * Retorna os dados detalhados do perfil
+     * pertencentes exclusivamente ao utilizador autenticado.
+     */
     public function actionIndex() {
         $user = Yii::$app->user->identity;
 
@@ -30,6 +35,10 @@ class PerfilController extends Controller
         return $perfil;
     }
 
+    /**
+     * Atualiza as informações de perfil do utilizador. Implementa uma lógica de 
+     * "upsert": se o registo de perfil não existir, é criado um novo vinculado ao ID do utilizador.
+     */
     public function actionUpdate()
     {
         $user = Yii::$app->user->identity;
@@ -51,3 +60,4 @@ class PerfilController extends Controller
     }
 
 }
+

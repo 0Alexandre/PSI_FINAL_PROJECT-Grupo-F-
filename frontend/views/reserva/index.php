@@ -78,14 +78,14 @@ $this->title = 'Minhas Reservas';
                 $btnCancelar = '';
 
                 // Só mostra o botão se a reserva for no FUTURO
-                if (strtotime($model->inicio) > time()) {
+                if ($model->estado == 'PENDENTE') {
                     $btnCancelar = Html::a(
                         '<i class="fas fa-trash-alt me-1"></i> Cancelar',
                         ['delete', 'id' => $model->id],
                         [
                             'class' => 'btn btn-outline-danger btn-sm w-100 rounded-pill fw-bold',
                             'data' => [
-                                'confirm' => 'Tem a certeza que pretende cancelar esta reserva?',
+                                'confirm' => 'Tem a certeza que pretende cancelar esta reserva pendente?',
                                 'method' => 'post',
                             ],
                         ]

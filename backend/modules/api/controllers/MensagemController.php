@@ -19,6 +19,10 @@ class MensagemController extends Controller
         return $behaviors;
     }
 
+    /**
+     * Retorna o histórico de mensagens enviadas pelo utilizador autenticado, 
+     * ordenadas da mais recente para a mais antiga.
+     */
     public function actionIndex() {
         $user = Yii::$app->user->identity;
 
@@ -28,6 +32,10 @@ class MensagemController extends Controller
             ->all();
     }
 
+    /**
+     * Processa o envio de uma nova mensagem, validando se o destinatário 
+     * é o SysAdmin ou o Administrador do condomínio do utilizador.
+     */
     public function actionCreate()
     {
         $user = Yii::$app->user->identity;
@@ -43,7 +51,7 @@ class MensagemController extends Controller
         $AdminCondominio = null;
 
         if (isset($user->fracao) && isset($user->fracao->condominio)) {
-            $AdminCondominio = $user->fracao->condominio->id_administrador;
+            $AdminCondominio = $user->fracao->condominio->admin_id;
         }
 
         if ($model->destinatario_id != $SysAdmin && $model->destinatario_id != $AdminCondominio) {
@@ -58,6 +66,10 @@ class MensagemController extends Controller
         return $model;
     }
 
+    /**
+     * Retorna a lista de destinatários permitidos  
+     * para preencher o componente de seleção  na aplicação Android.
+     */
     public function actionDestinatarios()
     {
         $user = Yii::$app->user->identity;

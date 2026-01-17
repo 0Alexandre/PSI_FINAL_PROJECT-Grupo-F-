@@ -17,6 +17,10 @@ class CondominioController extends Controller
         return $behaviors;
     }
 
+    /**
+     * Retorna os detalhes do condomínio associado ao utilizador autenticado via token.
+     * Útil para carregar informações contextuais na App Android.
+     */
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;

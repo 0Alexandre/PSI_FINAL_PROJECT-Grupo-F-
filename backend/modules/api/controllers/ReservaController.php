@@ -123,22 +123,37 @@ class ReservaController extends Controller
      */
     public function actionDelete($id)
     {
-        $user = Yii::$app->user->identity;
-        $model = Reserva::findOne($id);
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        if (!$model) throw new NotFoundHttpException();
-
-        $isDono = ($model->utilizador_id == $user->id);
-        $isGestor = Condominio::find()
-            ->joinWith('espacosComuns')
-            ->where(['admin_id' => $user->id, 'espacos_comuns.id' => $model->espaco_id])
-            ->exists();
-
-        if ($isDono || $isGestor) {
-            $model->delete();
-            return ["message" => "Reserva removida com sucesso."];
+        $user = \Yii::$app->user->identity;
+        if (!$user) {
+            return ["error" => "Utilizador não autenticado. Verifica o token."];
         }
 
-        throw new ForbiddenHttpException("Não tens permissão para remover esta reserva.");
+        $model = Reserva::findOne($id);
+        if (!$model) {
+            return ["error" => "Reserva não encontrada."];
+        }
+
+        $isDono = ($model->utilizador_id == $user->id);
+
+        $isGestor = false;
+        if (!$isDono) {
+            $isGestor = Condominio::find()
+                ->innerJoin('espacos_comuns', 'espacos_comuns.condominio_id = condominio.id')
+                ->where([
+                    'condominio.admin_id' => $user->id,
+                    'espacos_comuns.id' => $model->espaco_id
+                ])->exists();
+        }
+
+        if ($isDono || $isGestor) {
+            if ($model->delete()) {
+                return ["message" => "Reserva removida com sucesso."];
+            }
+            return ["error" => "Erro ao remover da base de dados."];
+        }
+
+        return ["error" => "Não tens permissão para remover esta reserva."];
     }
 }

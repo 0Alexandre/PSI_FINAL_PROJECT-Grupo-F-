@@ -9,9 +9,6 @@ use yii\web\ForbiddenHttpException;
 
 class AuthController extends Controller
 {
-    /**
-     * Login: Recebe username e password via POST e devolve o Token
-     */
     public function actionLogin()
     {
         $username = Yii::$app->request->post('username');
@@ -20,6 +17,12 @@ class AuthController extends Controller
         $user = User::findByUsername($username);
 
         if ($user && $user->validatePassword($password)) {
+            $auth = Yii::$app->authManager;
+            $roles = $auth->getRolesByUser($user->id);
+
+            if (!isset($roles['proprietario'])) {
+                throw new ForbiddenHttpException('Acesso restrito: Apenas proprietários podem entrar na App.');
+            }
 
             return [
                 'token' => $user->auth_key,

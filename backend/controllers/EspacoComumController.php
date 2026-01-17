@@ -29,7 +29,7 @@ class EspacoComumController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['adminCondominio', 'sysadmin'], // Adicionado sysadmin
+                        'roles' => ['adminCondominio', 'sysadmin'],
                     ],
                 ],
             ],

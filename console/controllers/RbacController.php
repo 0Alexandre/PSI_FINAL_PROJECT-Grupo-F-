@@ -1,43 +1,36 @@
 <?php
-
 namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
 
-/**
- * Controlador para inicializar a estrutura de RBAC (Roles e Permissões).
- * Execução: php yii rbac/init
- */
 class RbacController extends Controller
 {
     public function actionInit()
     {
         $auth = Yii::$app->authManager;
+        $auth->removeAll(); // Garante uma instalação limpa
 
-        $loginBackend = $auth->createPermission('loginToBackend');
-        $loginBackend->description = 'Fazer login na área administrativa';
-        $auth->add($loginBackend);
-
-        $gerirUsers = $auth->createPermission('gerirUtilizadores');
-        $gerirUsers->description = 'Criar, editar e apagar utilizadores';
-        $auth->add($gerirUsers);
-
+        // 1. Criar os Roles (Papéis)
         $proprietario = $auth->createRole('proprietario');
-        $proprietario->description = 'Morador com acesso ao site';
+        $proprietario->description = 'Acesso apenas ao Front-office';
         $auth->add($proprietario);
 
-        $adminCondominio = $auth->createRole('adminCondominio');
-        $adminCondominio->description = 'Gestor de Condomínio';
-        $auth->add($adminCondominio);
-
-        $auth->addChild($adminCondominio, $loginBackend);
+        $adminCondo = $auth->createRole('adminCondominio');
+        $adminCondo->description = 'Gestor Operacional do Condomínio';
+        $auth->add($adminCondo);
 
         $sysadmin = $auth->createRole('sysadmin');
-        $sysadmin->description = 'Administrador de Sistema';
+        $sysadmin->description = 'Administrador Técnico do Sistema';
         $auth->add($sysadmin);
 
-        $auth->addChild($sysadmin, $gerirUsers);
+        // 2. Definir a Hierarquia Lógica
+        // O Admin de Condomínio herda as permissões do proprietário
+        $auth->addChild($adminCondo, $proprietario);
 
+        // O sysadmin NÃO herda do adminCondo.
+        // Ele é independente para gerir apenas Utilizadores e Condomínios.
+
+        echo "RBAC configurado com sucesso: Segregação de funções ativa.\n";
     }
 }

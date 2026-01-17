@@ -149,16 +149,12 @@ class ReservaController extends \yii\web\Controller
             throw new \yii\web\ForbiddenHttpException('Não tem permissão para cancelar esta reserva.');
         }
 
-        // 2. REGRA DE TEMPO (O que faltava):
-        // Se a data de início for menor que agora (time()), significa que já passou ou já começou.
-        if (strtotime($model->inicio) < time()) {
-            Yii::$app->session->setFlash('error', 'Não é possível cancelar uma reserva que já aconteceu.');
-            return $this->redirect(['index']);
+        // 2. APAGAR
+        if ($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Reserva cancelada com sucesso.');
+        } else {
+            Yii::$app->session->setFlash('error', 'Erro ao tentar cancelar a reserva na base de dados.');
         }
-
-        // 3. Apagar
-        $model->delete();
-        Yii::$app->session->setFlash('success', 'Reserva cancelada com sucesso.');
 
         return $this->redirect(['index']);
     }
