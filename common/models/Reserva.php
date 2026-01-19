@@ -178,6 +178,17 @@ class Reserva extends \yii\db\ActiveRecord
         $this->estado = self::ESTADO_REJEITADA;
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        $fields['nomeEspaco'] = function ($model) {
+            return $model->espaco ? $model->espaco->nome : 'N/A';
+        };
+
+        return $fields;
+    }
+
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

@@ -167,7 +167,7 @@ class Anuncio extends \yii\db\ActiveRecord
         $this->FazPublishNoMosquitto("DELETE", $myJSON);
     }
 
-    public function FazPublishNoMosquitto($canal, $msg)
+    public function FazPublishNoMosquitto($acao, $msg)
     {
         $server = "127.0.0.1";
         $port = 1883;
@@ -176,7 +176,7 @@ class Anuncio extends \yii\db\ActiveRecord
         $mqtt = new phpMQTT($server, $port, $client_id);
 
         if ($mqtt->connect(true, NULL, "", "")) {
-            $mqtt->publish($canal, $msg, 0);
+            $mqtt->publish("condominio/anuncios", $msg, 0);
             $mqtt->close();
         }
     }

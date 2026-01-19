@@ -28,7 +28,8 @@ class MensagemController extends Controller
 
         return Mensagem::find()
             ->where(['remetente_id' => $user->id])
-            ->orderBy(['id' => SORT_DESC])
+            ->orWhere(['destinatario_id' => $user->id])
+            ->orderBy(['data_envio' => SORT_DESC])
             ->all();
     }
 

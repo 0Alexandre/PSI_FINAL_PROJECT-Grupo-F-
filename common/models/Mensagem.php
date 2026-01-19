@@ -71,6 +71,19 @@ class Mensagem extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'destinatario_id']);
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        // Adiciona o nome do remetente ao JSON para o Android ler
+        $fields['remetente_nome'] = function ($model) {
+            // Usamos 'username' para aparecer 'admin1' ou 'sysadmin'
+            return $model->remetente ? $model->remetente->username : 'Desconhecido';
+        };
+
+        return $fields;
+    }
+
     /**
      * Gets query for [[Remetente]].
      *
@@ -88,20 +101,18 @@ class Mensagem extends \yii\db\ActiveRecord
         if ($insert) {
             $myObj = new \stdClass();
             $myObj->id = $this->id;
-            $myObj->remetente_id = $this->remetente_id;
-            $myObj->destinatario_id = $this->destinatario_id;
             $myObj->assunto = $this->assunto;
-            $myObj->corpo = $this->corpo;
-            $myObj->data_envio = $this->data_envio;
+            $myObj->corpo = $this->corpo; // O conteúdo da mensagem
             $myObj->tipo_model = 'MENSAGEM';
 
             $myJSON = json_encode($myObj);
 
-            $this->FazPublishNoMosquitto("INSERT", $myJSON);
+            // MUDA AQUI: Usar o tópico que o Android vai ouvir
+            $this->FazPublishNoMosquitto("condominio/mensagens", $myJSON);
         }
     }
 
-    public function FazPublishNoMosquitto($canal, $msg)
+    public function FazPublishNoMosquitto($topico, $msg)
     {
         $server = "127.0.0.1";
         $port = 1883;
@@ -110,7 +121,7 @@ class Mensagem extends \yii\db\ActiveRecord
         $mqtt = new phpMQTT($server, $port, $client_id);
 
         if ($mqtt->connect(true, NULL, "", "")) {
-            $mqtt->publish($canal, $msg, 0);
+            $mqtt->publish($topico, $msg, 0);
             $mqtt->close();
         }
     }
